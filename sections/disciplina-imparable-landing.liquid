@@ -46,10 +46,23 @@
 
 .di {
   font-family: var(--sans);
-  background: var(--s0);
   color: var(--t-primary);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  /* fondo atmosférico multicapa */
+  background:
+    /* grano premium — textura táctil */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.038'/%3E%3C/svg%3E") repeat,
+    /* spotlight dorado desde arriba — iluminación de escena */
+    radial-gradient(ellipse 100% 55% at 50% -2%, rgba(184,151,42,0.18) 0%, transparent 68%),
+    /* luz lateral izquierda — profundidad */
+    radial-gradient(ellipse 40% 65% at -2% 50%, rgba(184,151,42,0.06) 0%, transparent 55%),
+    /* luz lateral derecha — profundidad */
+    radial-gradient(ellipse 40% 65% at 102% 50%, rgba(184,151,42,0.06) 0%, transparent 55%),
+    /* brasa desde abajo — fuego, acción, urgencia */
+    radial-gradient(ellipse 75% 32% at 50% 102%, rgba(160,100,8,0.14) 0%, transparent 70%),
+    /* fondo base negro */
+    #000000;
 }
 
 /* ── Contenedor universal ── */
@@ -203,7 +216,7 @@
   place-items: center;
   text-align: center;
   padding: clamp(var(--sp-15), 15vh, var(--sp-20)) var(--gutter) var(--sp-20);
-  background: var(--s0);
+  background: transparent;
   overflow: hidden;
   isolation: isolate;
 }
@@ -219,13 +232,22 @@
 .di .hero::after {
   content: '';
   position: absolute;
-  top: 0; left: 50%;
+  top: -10%; left: 50%;
   transform: translateX(-50%);
-  width: min(800px, 100%);
-  height: 60%;
-  background: radial-gradient(ellipse at top, rgba(184,151,42,0.06) 0%, transparent 65%);
+  width: min(1000px, 120%);
+  height: 75%;
+  background: radial-gradient(ellipse at top,
+    rgba(184,151,42,0.22) 0%,
+    rgba(184,151,42,0.08) 35%,
+    transparent 70%
+  );
   z-index: 0;
   pointer-events: none;
+  animation: di-hero-breathe 5s ease-in-out infinite;
+}
+@keyframes di-hero-breathe {
+  0%, 100% { opacity: 0.85; transform: translateX(-50%) scaleY(1);   }
+  50%       { opacity: 1;    transform: translateX(-50%) scaleY(1.08); }
 }
 .di .hero__inner {
   position: relative;
