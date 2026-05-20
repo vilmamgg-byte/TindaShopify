@@ -49,7 +49,7 @@
   background: var(--s0);
   color: var(--t-primary);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ── Contenedor universal ── */
@@ -1232,11 +1232,20 @@
 
 <script>
 (function () {
-  // Scroll reveal
+  var selAll = function (s) { return document.querySelectorAll('#disciplina-imparable ' + s); };
+
+  // Shopify Customizer: mostrar todo inmediatamente
+  if (window.Shopify && window.Shopify.designMode) {
+    selAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
+  }
+
+  // Scroll reveal (solo fuera del Customizer)
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
-  document.querySelectorAll('#disciplina-imparable .reveal').forEach(function (el) { io.observe(el); });
+  if (!(window.Shopify && window.Shopify.designMode)) {
+    selAll('.reveal').forEach(function (el) { io.observe(el); });
+  }
 
   // FAQ accordion
   document.querySelectorAll('#disciplina-imparable .faq__trigger').forEach(function (btn) {
