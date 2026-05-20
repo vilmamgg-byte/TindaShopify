@@ -1,138 +1,1058 @@
-{% comment %} Disciplina Imparable — Landing Page v2 {% endcomment %}
+{% comment %}
+  Disciplina Imparable — Landing Page
+  Sistema de diseño: 8-point grid · Nothing.tech · Linear.app · Apple
+  Colores: 5 superficies (#000→#1A1A1A) + gold #B8972A (uso restringido)
+  Tipografía: Inter (sans) + Cormorant Garamond (serif) — mezcla de fuentes
+{% endcomment %}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-{{ 'disciplina-imparable.css' | asset_url | stylesheet_tag }}
+{{ 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap' | stylesheet_tag }}
 
-<div class="di-root" id="di-page">
+<style>
+/* ════════════════════════════════════════════
+   DESIGN TOKENS — Sistema de 8 puntos
+   Referencia: Nothing.tech, Linear.app, Apple
+════════════════════════════════════════════ */
+:root {
+  --sp-1:  8px;  --sp-2:  16px; --sp-3:  24px;
+  --sp-4:  32px; --sp-5:  40px; --sp-6:  48px;
+  --sp-8:  64px; --sp-10: 80px; --sp-12: 96px;
+  --sp-15: 120px;--sp-20: 160px;
 
-  {%- comment -%} ══ HERO ══ {%- endcomment -%}
-  <section class="di-hero" aria-label="Inicio">
-    <div class="di-hero-inner">
+  --s0: #000000; --s1: #080808; --s2: #0F0F0F;
+  --s3: #141414; --s4: #1A1A1A;
 
-      <span class="di-eyebrow">{{ section.settings.hero_eyebrow }}</span>
+  --b1: rgba(255,255,255,0.05);
+  --b2: rgba(255,255,255,0.09);
+  --b3: rgba(255,255,255,0.16);
+  --b-gold: rgba(184,151,42,0.25);
 
-      <h1 class="di-display">
-        <span class="di-word-sans">{{ section.settings.hero_word_sans }}</span>
-        <span class="di-word-serif">{{ section.settings.hero_word_serif }}</span>
-      </h1>
+  --t-primary:   #EFEFEF;
+  --t-secondary: rgba(239,239,239,0.50);
+  --t-tertiary:  rgba(239,239,239,0.28);
 
-      <div class="di-hero-rule" aria-hidden="true"></div>
+  --gold:     #B8972A;
+  --gold-dim: rgba(184,151,42,0.08);
 
-      <p class="di-subtitle">{{ section.settings.hero_subtitle }}</p>
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans:  'Inter', system-ui, sans-serif;
 
-      <div class="di-hero-cta">
-        <a href="{{ section.settings.product_url }}" class="di-btn di-btn-primary">
-          {{ section.settings.hero_cta }}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <span class="di-proof">
+  --max-w:      1200px;
+  --max-w-text: 680px;
+  --gutter:     clamp(24px, 5vw, 80px);
+  --ease:       cubic-bezier(0.25, 0, 0, 1);
+}
+
+.di *, .di *::before, .di *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.di {
+  font-family: var(--sans);
+  background: var(--s0);
+  color: var(--t-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Contenedor universal ── */
+.di .wrap {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ── Label de sección ── */
+.di .section-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--t-tertiary);
+  margin-bottom: var(--sp-6);
+}
+.di .section-label .num { color: var(--gold); font-variant-numeric: tabular-nums; }
+.di .section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--b1);
+  max-width: 80px;
+}
+
+/* ── Botón ── */
+.di .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 56px;
+  padding: 0 var(--sp-6);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  white-space: nowrap;
+  border-radius: 0;
+}
+.di .btn--primary { background: var(--gold); color: var(--s0); }
+.di .btn--primary:hover { background: #C9A840; transform: translateY(-1px); }
+.di .btn--outline { background: transparent; color: var(--t-secondary); border: 1px solid var(--b2); }
+.di .btn--outline:hover { border-color: var(--b3); color: var(--t-primary); }
+
+/* ── Reveal on scroll ── */
+.di .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.di .reveal.visible { opacity: 1; transform: none; }
+.di .reveal-d1 { transition-delay: 0.05s; }
+.di .reveal-d2 { transition-delay: 0.10s; }
+.di .reveal-d3 { transition-delay: 0.15s; }
+.di .reveal-d4 { transition-delay: 0.20s; }
+.di .reveal-d5 { transition-delay: 0.25s; }
+.di .reveal-d6 { transition-delay: 0.30s; }
+
+/* ════════════════════════════════════════════
+   HERO
+   min-height: 100svh
+   Ruido de grano 4% — textura industrial
+   Halo de luz: radial-gradient 6% opacidad
+   Tipografía: 2 líneas, 2 fuentes
+════════════════════════════════════════════ */
+.di .hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: clamp(var(--sp-15), 15vh, var(--sp-20)) var(--gutter) var(--sp-20);
+  background: var(--s0);
+  overflow: hidden;
+  isolation: isolate;
+}
+.di .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  z-index: 0;
+  pointer-events: none;
+}
+.di .hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: min(800px, 100%);
+  height: 60%;
+  background: radial-gradient(ellipse at top, rgba(184,151,42,0.06) 0%, transparent 65%);
+  z-index: 0;
+  pointer-events: none;
+}
+.di .hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.di .hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--t-tertiary);
+  margin-bottom: var(--sp-8);
+  opacity: 0;
+  animation: di-fade-up 0.9s var(--ease) forwards 0.1s;
+}
+.di .hero__eyebrow::before,
+.di .hero__eyebrow::after {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.6;
+}
+.di .hero__display {
+  margin-bottom: var(--sp-4);
+  opacity: 0;
+  animation: di-fade-up 0.9s var(--ease) forwards 0.25s;
+}
+.di .hero__word-sans {
+  display: block;
+  font-family: var(--sans);
+  font-size: clamp(56px, 11vw, 120px);
+  font-weight: 800;
+  line-height: 0.90;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--t-primary);
+}
+.di .hero__word-serif {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(68px, 13vw, 148px);
+  font-weight: 300;
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  font-style: italic;
+  color: var(--gold);
+}
+.di .hero__rule {
+  width: 48px; height: 1px;
+  background: var(--gold);
+  margin: var(--sp-5) auto;
+  opacity: 0;
+  animation: di-fade-in 0.6s var(--ease) forwards 0.5s;
+}
+.di .hero__subtitle {
+  font-size: clamp(15px, 2vw, 18px);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--t-secondary);
+  max-width: 520px;
+  margin-bottom: var(--sp-8);
+  opacity: 0;
+  animation: di-fade-up 0.9s var(--ease) forwards 0.6s;
+}
+.di .hero__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  opacity: 0;
+  animation: di-fade-up 0.9s var(--ease) forwards 0.75s;
+}
+.di .hero__proof {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--t-tertiary);
+}
+.di .hero__proof strong { color: var(--t-secondary); font-weight: 500; }
+.di .scroll-indicator {
+  position: absolute;
+  bottom: var(--sp-5);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  opacity: 0;
+  animation: di-fade-in 1s var(--ease) forwards 1.2s;
+}
+.di .scroll-indicator span {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--t-tertiary);
+}
+.di .scroll-track {
+  width: 1px; height: 48px;
+  background: var(--b2);
+  position: relative;
+  overflow: hidden;
+}
+.di .scroll-track::after {
+  content: '';
+  position: absolute;
+  top: -100%; left: 0;
+  width: 100%; height: 100%;
+  background: var(--gold);
+  animation: di-scroll-line 2s var(--ease) infinite 1.5s;
+}
+
+/* ════════════════════════════════════════════
+   MÉTRICAS — Referencia: Apple specs page
+   Sin fondo propio. Solo bordes superior/inferior.
+   3 números separados por 1px vertical.
+════════════════════════════════════════════ */
+.di .metrics {
+  border-top: 1px solid var(--b1);
+  border-bottom: 1px solid var(--b1);
+  background: var(--s1);
+}
+.di .metrics__inner {
+  display: flex;
+  align-items: stretch;
+}
+.di .metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: clamp(var(--sp-5), 5vw, var(--sp-8)) var(--sp-3);
+  border-right: 1px solid var(--b1);
+}
+.di .metric:last-child { border-right: none; }
+.di .metric__num {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--t-primary);
+  letter-spacing: -0.02em;
+}
+.di .metric__label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--t-tertiary);
+}
+
+/* ════════════════════════════════════════════
+   SECCIONES — Padding fluido, superficies alternas
+════════════════════════════════════════════ */
+.di .section {
+  padding-block: clamp(var(--sp-10), 10vw, var(--sp-15));
+}
+.di .section--s0 { background: var(--s0); }
+.di .section--s1 { background: var(--s1); }
+.di .section--s2 { background: var(--s2); }
+
+/* ════════════════════════════════════════════
+   01 — DOLOR
+   2 columnas desktop: 5fr / 7fr
+   Lista con separadores 1px, sin bullets
+════════════════════════════════════════════ */
+.di .pain__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--sp-8), 6vw, var(--sp-15));
+  align-items: start;
+}
+@media (min-width: 800px) {
+  .di .pain__grid { grid-template-columns: 5fr 7fr; }
+}
+.di .pain__headline {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--t-primary);
+  margin-top: var(--sp-1);
+}
+.di .pain__list {
+  list-style: none;
+  border-top: 1px solid var(--b1);
+}
+.di .pain__item {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--b1);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--t-secondary);
+  transition: color 0.2s var(--ease);
+}
+.di .pain__item:hover { color: var(--t-primary); }
+.di .pain__item::before {
+  content: '—';
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.di .pain__bridge {
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-8);
+  border-top: 1px solid var(--b1);
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: var(--sp-3);
+  align-items: start;
+}
+.di .pain__bridge-rule {
+  width: 32px; height: 1px;
+  background: var(--gold);
+  margin-top: 12px;
+}
+.di .pain__bridge-text {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--t-primary);
+}
+
+/* ════════════════════════════════════════════
+   02 — SOLUCIÓN
+   Nombre del libro: 2 líneas, 2 fuentes
+   Promesa: borde izquierdo 2px gold
+════════════════════════════════════════════ */
+.di .promise__center {
+  max-width: 640px;
+  margin-inline: auto;
+  text-align: center;
+}
+.di .promise__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-bottom: var(--sp-8);
+}
+.di .promise__title .word-a {
+  font-family: var(--sans);
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--t-primary);
+}
+.di .promise__title .word-b {
+  font-family: var(--serif);
+  font-size: clamp(52px, 9vw, 104px);
+  font-weight: 300;
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  font-style: italic;
+  color: var(--gold);
+}
+.di .promise__body {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--t-secondary);
+  margin-bottom: var(--sp-8);
+}
+.di .promise__quote {
+  border-left: 2px solid var(--gold);
+  padding: var(--sp-4) var(--sp-5);
+  text-align: left;
+  font-family: var(--serif);
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--t-primary);
+  background: var(--gold-dim);
+}
+
+/* ════════════════════════════════════════════
+   03 — BENEFICIOS
+   Grid de bordes, sin cards flotantes
+   Sin emojis. Numeración tabular en gold.
+   Referencia: Linear.app features
+════════════════════════════════════════════ */
+.di .benefits__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--b1);
+}
+@media (min-width: 640px) {
+  .di .benefits__grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 960px) {
+  .di .benefits__grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+.di .benefit {
+  padding: var(--sp-6) var(--sp-5);
+  border-bottom: 1px solid var(--b1);
+  border-right: 1px solid var(--b1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  transition: background 0.2s var(--ease);
+}
+.di .benefit:hover { background: var(--s3); }
+.di .benefit__num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--sp-1);
+}
+.di .benefit__title {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--t-primary);
+  letter-spacing: -0.01em;
+}
+.di .benefit__text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--t-secondary);
+}
+
+/* ════════════════════════════════════════════
+   04 — CONTENIDO DEL EBOOK
+   Tabla de capítulos: número + título + desc
+   Referencia: Apple specs table
+════════════════════════════════════════════ */
+.di .chapters { max-width: var(--max-w-text); margin-inline: auto; }
+.di .chapter {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--sp-4);
+  padding-block: var(--sp-5);
+  border-bottom: 1px solid var(--b1);
+  align-items: start;
+}
+.di .chapter:first-child { border-top: 1px solid var(--b1); }
+.di .chapter__num {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  padding-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.di .chapter__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--t-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.di .chapter__desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--t-secondary);
+}
+
+/* ════════════════════════════════════════════
+   CTA INTERMEDIO
+   Solo texto serif italic + botón
+   Referencia: Nothing.tech CTA break
+════════════════════════════════════════════ */
+.di .mid-cta {
+  padding-block: clamp(var(--sp-10), 10vw, var(--sp-15));
+  background: var(--s0);
+  border-top: 1px solid var(--b1);
+  border-bottom: 1px solid var(--b1);
+  text-align: center;
+}
+.di .mid-cta__text {
+  font-family: var(--serif);
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--t-primary);
+  max-width: 640px;
+  margin-inline: auto;
+  margin-bottom: var(--sp-8);
+  letter-spacing: -0.01em;
+}
+
+/* ════════════════════════════════════════════
+   05 — TESTIMONIOS
+   3 columnas con 1px separadores verticales
+   Comilla 160px en bg, 4% opacidad
+   Sin card borders en todos los lados
+════════════════════════════════════════════ */
+.di .testimonials__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--b1);
+}
+@media (min-width: 760px) {
+  .di .testimonials__grid { grid-template-columns: repeat(3, 1fr); }
+}
+.di .testimonial {
+  position: relative;
+  padding: var(--sp-8) var(--sp-6);
+  border-bottom: 1px solid var(--b1);
+  border-right: 1px solid var(--b1);
+  overflow: hidden;
+}
+@media (min-width: 760px) {
+  .di .testimonials__grid .testimonial:last-child { border-right: none; }
+}
+.di .testimonial::before {
+  content: '\201C';
+  font-family: var(--serif);
+  font-size: 160px;
+  line-height: 1;
+  color: var(--t-primary);
+  opacity: 0.04;
+  position: absolute;
+  top: var(--sp-3);
+  left: var(--sp-4);
+  pointer-events: none;
+  user-select: none;
+}
+.di .testimonial__text {
+  font-family: var(--serif);
+  font-size: clamp(16px, 2vw, 19px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--t-secondary);
+  margin-bottom: var(--sp-6);
+  position: relative;
+}
+.di .testimonial__author {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.di .testimonial__avatar {
+  width: 32px; height: 32px;
+  background: var(--gold-dim);
+  border: 1px solid var(--b-gold);
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.di .testimonial__name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--t-primary);
+  line-height: 1.3;
+}
+.di .testimonial__role {
+  font-size: 11px;
+  color: var(--t-tertiary);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+.di .testimonial__stars {
+  margin-top: var(--sp-4);
+  display: flex;
+  gap: 3px;
+}
+.di .testimonial__stars span {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+}
+
+/* ════════════════════════════════════════════
+   06 — PRECIO
+   El número del precio: protagonista único.
+   Cormorant 96-112px — sin competencia visual.
+   Referencia: Apple pricing page
+════════════════════════════════════════════ */
+.di .offer {
+  padding-block: clamp(var(--sp-10), 10vw, var(--sp-20));
+  background: var(--s1);
+  text-align: center;
+  border-top: 1px solid var(--b1);
+  border-bottom: 1px solid var(--b1);
+}
+.di .offer__inner { max-width: 560px; margin-inline: auto; }
+.di .offer__product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-10);
+}
+.di .offer__name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--t-tertiary);
+}
+.di .offer__title-serif {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--t-primary);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.di .offer__includes {
+  list-style: none;
+  margin-bottom: var(--sp-10);
+  border-top: 1px solid var(--b1);
+}
+.di .offer__includes li {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: var(--sp-2);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--b1);
+  font-size: 14px;
+  color: var(--t-secondary);
+  text-align: left;
+}
+.di .offer__includes li::before {
+  content: '✓';
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  padding-top: 2px;
+}
+.di .price-block {
+  margin-bottom: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+}
+.di .price-was {
+  font-size: 13px;
+  color: var(--t-tertiary);
+  text-decoration: line-through;
+  letter-spacing: 0.04em;
+}
+.di .price-now {
+  font-family: var(--serif);
+  font-size: clamp(72px, 14vw, 112px);
+  font-weight: 600;
+  line-height: 0.9;
+  color: var(--t-primary);
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+.di .price-now sup {
+  font-size: 0.3em;
+  vertical-align: super;
+  font-weight: 400;
+  color: var(--t-secondary);
+  margin-top: 12px;
+}
+.di .price-context {
+  font-size: 12px;
+  color: var(--t-tertiary);
+  letter-spacing: 0.06em;
+}
+.di .urgency {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+}
+.di .urgency::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: di-pulse 2s ease infinite;
+}
+.di .offer__btn { width: 100%; max-width: 360px; display: block; margin: 0 auto; text-align: center; }
+.di .offer__guarantee {
+  margin-top: var(--sp-4);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--t-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+.di .offer__guarantee::before { content: '—'; color: var(--b3); }
+
+/* ════════════════════════════════════════════
+   07 — GARANTÍA
+════════════════════════════════════════════ */
+.di .guarantee { max-width: 560px; margin-inline: auto; text-align: center; }
+.di .guarantee__title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--t-secondary);
+  margin-bottom: var(--sp-3);
+}
+.di .guarantee__text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--t-tertiary);
+}
+
+/* ════════════════════════════════════════════
+   08 — FAQ
+   Referencia: Linear.app FAQ
+   El + rota 45° en lugar de cambiar a ×
+════════════════════════════════════════════ */
+.di .faq { max-width: var(--max-w-text); margin-inline: auto; }
+.di .faq__item { border-bottom: 1px solid var(--b1); }
+.di .faq__item:first-child { border-top: 1px solid var(--b1); }
+.di .faq__trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--sp-5) 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  cursor: pointer;
+  text-align: left;
+  transition: opacity 0.2s var(--ease);
+}
+.di .faq__trigger:hover { opacity: 0.8; }
+.di .faq__q {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--t-primary);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+.di .faq__icon {
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  position: relative;
+  color: var(--gold);
+  transition: transform 0.3s var(--ease);
+}
+.di .faq__icon::before,
+.di .faq__icon::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+.di .faq__icon::before { width: 1px; height: 100%; left: 50%; transform: translateX(-50%); }
+.di .faq__icon::after  { width: 100%; height: 1px; top: 50%; transform: translateY(-50%); }
+.di .faq__item.open .faq__icon { transform: rotate(45deg); }
+.di .faq__body {
+  display: none;
+  padding-bottom: var(--sp-5);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--t-secondary);
+  max-width: 560px;
+}
+.di .faq__item.open .faq__body { display: block; }
+
+/* ════════════════════════════════════════════
+   09 — CTA FINAL
+   Referencia: Apple "Get it today"
+   Solo tipografía grande + botón. Sin fondo especial.
+════════════════════════════════════════════ */
+.di .final-cta {
+  padding-block: clamp(var(--sp-15), 15vw, var(--sp-20));
+  background: var(--s0);
+  text-align: center;
+  border-top: 1px solid var(--b1);
+}
+.di .final-cta__inner {
+  max-width: 640px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-6);
+}
+.di .final-cta__title {
+  font-family: var(--serif);
+  font-size: clamp(40px, 7vw, 72px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--t-primary);
+}
+.di .final-cta__title span { color: var(--gold); }
+.di .final-cta__sub {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--t-secondary);
+  max-width: 440px;
+}
+.di .final-cta__note {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--t-tertiary);
+}
+
+/* ════════════════════════════════════════════
+   STICKY BAR MOBILE — altura 64px exacta
+   backdrop-filter: blur(20px)
+════════════════════════════════════════════ */
+.di .sticky-bar {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--b2);
+  z-index: 500;
+  padding: 0 var(--sp-3);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+@media (max-width: 640px) { .di .sticky-bar { display: flex; } }
+.di .sticky-bar__info { display: flex; flex-direction: column; gap: 2px; }
+.di .sticky-bar__name { font-size: 13px; font-weight: 600; color: var(--t-primary); letter-spacing: -0.01em; }
+.di .sticky-bar__price { font-size: 11px; color: var(--t-tertiary); }
+.di .sticky-bar .btn { height: 40px; padding: 0 var(--sp-4); font-size: 11px; }
+
+@media (max-width: 640px) { .di { padding-bottom: 64px; } }
+
+/* ── Keyframes ── */
+@keyframes di-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes di-fade-in {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes di-scroll-line {
+  0% { top: -100%; } 100% { top: 100%; }
+}
+@keyframes di-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+</style>
+
+<div class="di" id="disciplina-imparable">
+
+  {%- comment -%} ── HERO ── {%- endcomment -%}
+  <section class="di hero">
+    <div class="di hero__inner">
+      <span class="di hero__eyebrow">{{ section.settings.hero_eyebrow }}</span>
+
+      <div class="di hero__display">
+        <span class="di hero__word-sans">{{ section.settings.hero_word_sans }}</span>
+        <span class="di hero__word-serif">{{ section.settings.hero_word_serif }}</span>
+      </div>
+
+      <div class="di hero__rule"></div>
+
+      <p class="di hero__subtitle">{{ section.settings.hero_subtitle }}</p>
+
+      <div class="di hero__cta">
+        {%- if section.settings.product_url != blank -%}
+          <a href="{{ section.settings.product_url }}" class="di btn btn--primary">
+            {{ section.settings.hero_cta }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        {%- endif -%}
+        <span class="di hero__proof">
           <strong>{{ section.settings.proof_number }}</strong> {{ section.settings.proof_text }}
         </span>
       </div>
-
     </div>
-    <div class="di-scroll-indicator" aria-hidden="true">
+
+    <div class="di scroll-indicator">
       <span>Scroll</span>
-      <div class="di-scroll-track"></div>
+      <div class="di scroll-track"></div>
     </div>
   </section>
 
-  {%- comment -%} ══ MÉTRICAS ══ {%- endcomment -%}
-  <div class="di-metrics" role="region" aria-label="Estadísticas">
-    <div class="di-metrics-inner di-wrap">
-      <div class="di-metric di-reveal">
-        <span class="di-metric-num"
-              data-counter="{{ section.settings.stat_1_raw }}"
-              data-counter-suffix="{{ section.settings.stat_1_suffix }}">
-          {{- section.settings.stat_1_num -}}
-        </span>
-        <span class="di-metric-label">{{ section.settings.stat_1_label }}</span>
+  {%- comment -%} ── MÉTRICAS ── {%- endcomment -%}
+  <div class="di metrics">
+    <div class="di metrics__inner wrap">
+      <div class="di metric">
+        <span class="di metric__num">{{ section.settings.stat_1_num }}</span>
+        <span class="di metric__label">{{ section.settings.stat_1_label }}</span>
       </div>
-      <div class="di-metric di-reveal di-d2">
-        <span class="di-metric-num"
-              data-counter="{{ section.settings.stat_2_raw }}"
-              data-counter-suffix="{{ section.settings.stat_2_suffix }}">
-          {{- section.settings.stat_2_num -}}
-        </span>
-        <span class="di-metric-label">{{ section.settings.stat_2_label }}</span>
+      <div class="di metric">
+        <span class="di metric__num">{{ section.settings.stat_2_num }}</span>
+        <span class="di metric__label">{{ section.settings.stat_2_label }}</span>
       </div>
-      <div class="di-metric di-reveal di-d3">
-        <span class="di-metric-num"
-              data-counter="{{ section.settings.stat_3_raw }}"
-              data-counter-suffix="{{ section.settings.stat_3_suffix }}">
-          {{- section.settings.stat_3_num -}}
-        </span>
-        <span class="di-metric-label">{{ section.settings.stat_3_label }}</span>
+      <div class="di metric">
+        <span class="di metric__num">{{ section.settings.stat_3_num }}</span>
+        <span class="di metric__label">{{ section.settings.stat_3_label }}</span>
       </div>
     </div>
   </div>
 
-  {%- comment -%} ══ 01 DOLOR ══ {%- endcomment -%}
-  <section class="di-section di-bg2" aria-label="El problema">
-    <div class="di-wrap">
-      <div class="di-pain-grid">
+  {%- comment -%} ── 01 DOLOR ── {%- endcomment -%}
+  <section class="di section section--s2">
+    <div class="di wrap">
+      <div class="di pain__grid">
         <div>
-          <div class="di-label di-reveal">
-            <span class="di-num">01</span>{{ section.settings.pain_label }}
+          <div class="di section-label reveal">
+            <span class="di num">01</span>
+            {{ section.settings.pain_label }}
           </div>
-          <h2 class="di-pain-headline di-reveal">{{ section.settings.pain_headline }}</h2>
+          <h2 class="di pain__headline reveal">{{ section.settings.pain_headline }}</h2>
         </div>
         <div>
-          <ul class="di-pain-list" role="list">
+          <ul class="di pain__list">
             {%- for block in section.blocks -%}
               {%- if block.type == 'pain_point' -%}
-                <li class="di-pain-item di-reveal di-d{{ forloop.index }}"
-                    role="listitem"
-                    {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+                <li class="di pain__item reveal reveal-d{{ forloop.index }}" {{ block.shopify_attributes }}>
+                  {{ block.settings.text }}
+                </li>
               {%- endif -%}
             {%- endfor -%}
           </ul>
-          <div class="di-pain-bridge di-reveal">
-            <div class="di-bridge-rule" aria-hidden="true"></div>
-            <p class="di-bridge-text">{{ section.settings.pain_bridge }}</p>
+          <div class="di pain__bridge reveal">
+            <div class="di pain__bridge-rule"></div>
+            <p class="di pain__bridge-text">{{ section.settings.pain_bridge }}</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  {%- comment -%} ══ 02 SOLUCIÓN ══ {%- endcomment -%}
-  <section class="di-section di-bg0" aria-label="La solución">
-    <div class="di-wrap">
-      <div class="di-label di-reveal" style="justify-content:center">
-        <span class="di-num">02</span>{{ section.settings.solution_label }}
+  {%- comment -%} ── 02 SOLUCIÓN ── {%- endcomment -%}
+  <section class="di section section--s0">
+    <div class="di wrap">
+      <div class="di section-label reveal" style="justify-content:center">
+        <span class="di num">02</span>
+        {{ section.settings.solution_label }}
       </div>
-      <div class="di-promise-center">
-        <div class="di-promise-title di-reveal">
-          <span class="di-title-sans">{{ section.settings.hero_word_sans }}</span>
-          <span class="di-title-serif">{{ section.settings.hero_word_serif }}</span>
+      <div class="di promise__center">
+        <div class="di promise__title reveal">
+          <span class="di word-a">{{ section.settings.hero_word_sans }}</span>
+          <span class="di word-b">{{ section.settings.hero_word_serif }}</span>
         </div>
-        <p class="di-promise-body di-reveal">{{ section.settings.solution_body }}</p>
-        <blockquote class="di-promise-quote di-reveal">{{ section.settings.solution_promise }}</blockquote>
+        <p class="di promise__body reveal">{{ section.settings.solution_body }}</p>
+        <blockquote class="di promise__quote reveal">{{ section.settings.solution_promise }}</blockquote>
       </div>
     </div>
   </section>
 
-  {%- comment -%} ══ 03 BENEFICIOS ══ {%- endcomment -%}
-  <section class="di-section di-bg1" aria-label="Beneficios">
-    <div class="di-wrap">
-      <div class="di-label di-reveal">
-        <span class="di-num">03</span>{{ section.settings.benefits_label }}
+  {%- comment -%} ── 03 BENEFICIOS ── {%- endcomment -%}
+  <section class="di section section--s1">
+    <div class="di wrap">
+      <div class="di section-label reveal">
+        <span class="di num">03</span>
+        {{ section.settings.benefits_label }}
       </div>
-      <div class="di-benefits-grid">
-        {%- assign bi = 0 -%}
+      <div class="di benefits__grid">
+        {%- assign benefit_index = 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'benefit' -%}
-            {%- assign bi = bi | plus: 1 -%}
-            {%- assign delay_b = 'di-d' | append: bi -%}
-            <div class="di-benefit di-reveal {{ delay_b }}" {{ block.shopify_attributes }}>
-              <span class="di-benefit-num" aria-hidden="true">
-                {%- if bi < 10 -%}0{%- endif -%}{{ bi }}
-              </span>
-              <h3 class="di-benefit-title">{{ block.settings.title }}</h3>
-              <p class="di-benefit-text">{{ block.settings.text }}</p>
+            {%- assign benefit_index = benefit_index | plus: 1 -%}
+            {%- assign delay_class = 'reveal-d' | append: benefit_index -%}
+            <div class="di benefit reveal {{ delay_class }}" {{ block.shopify_attributes }}>
+              <span class="di benefit__num">{{ benefit_index | prepend: '0' | slice: -2, 2 }}</span>
+              <h3 class="di benefit__title">{{ block.settings.title }}</h3>
+              <p class="di benefit__text">{{ block.settings.text }}</p>
             </div>
           {%- endif -%}
         {%- endfor -%}
@@ -140,27 +1060,24 @@
     </div>
   </section>
 
-  {%- comment -%} ══ 04 CONTENIDO ══ {%- endcomment -%}
-  <section class="di-section di-bg2" aria-label="Contenido del ebook">
-    <div class="di-wrap">
-      <div class="di-label di-reveal">
-        <span class="di-num">04</span>{{ section.settings.contents_label }}
+  {%- comment -%} ── 04 CONTENIDO ── {%- endcomment -%}
+  <section class="di section section--s2">
+    <div class="di wrap">
+      <div class="di section-label reveal">
+        <span class="di num">04</span>
+        {{ section.settings.contents_label }}
       </div>
-      <div class="di-chapters">
-        {%- assign ci = 0 -%}
+      <div class="di chapters">
+        {%- assign ch_index = 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'chapter' -%}
-            {%- assign ci = ci | plus: 1 -%}
-            {%- assign delay_c = 'di-d' | append: ci -%}
-            <div class="di-chapter di-reveal {{ delay_c }}" {{ block.shopify_attributes }}>
-              <span class="di-chapter-num" aria-hidden="true">
-                {%- if ci < 10 -%}0{%- endif -%}{{ ci }}
-              </span>
+            {%- assign ch_index = ch_index | plus: 1 -%}
+            {%- assign delay_class = 'reveal-d' | append: ch_index -%}
+            <div class="di chapter reveal {{ delay_class }}" {{ block.shopify_attributes }}>
+              <span class="di chapter__num">{{ ch_index | prepend: '0' | slice: -2, 2 }}</span>
               <div>
-                <p class="di-chapter-title">{{ block.settings.title }}</p>
-                {%- if block.settings.desc != blank -%}
-                  <p class="di-chapter-desc">{{ block.settings.desc }}</p>
-                {%- endif -%}
+                <p class="di chapter__title">{{ block.settings.title }}</p>
+                <p class="di chapter__desc">{{ block.settings.desc }}</p>
               </div>
             </div>
           {%- endif -%}
@@ -169,40 +1086,40 @@
     </div>
   </section>
 
-  {%- comment -%} ══ CTA INTERMEDIO ══ {%- endcomment -%}
-  <div class="di-mid-cta">
-    <div class="di-wrap">
-      <p class="di-mid-text di-reveal">{{ section.settings.mid_cta_text }}</p>
-      <a href="{{ section.settings.product_url }}"
-         class="di-btn di-btn-primary di-reveal di-d2">{{ section.settings.mid_cta_btn }}</a>
+  {%- comment -%} ── CTA INTERMEDIO ── {%- endcomment -%}
+  <div class="di mid-cta">
+    <div class="di wrap">
+      <p class="di mid-cta__text reveal">{{ section.settings.mid_cta_text }}</p>
+      <a href="{{ section.settings.product_url }}" class="di btn btn--primary reveal">
+        {{ section.settings.mid_cta_btn }}
+      </a>
     </div>
   </div>
 
-  {%- comment -%} ══ 05 TESTIMONIOS ══ {%- endcomment -%}
-  <section class="di-section di-bg1" aria-label="Testimonios">
-    <div class="di-wrap">
-      <div class="di-label di-reveal">
-        <span class="di-num">05</span>{{ section.settings.testimonials_label }}
+  {%- comment -%} ── 05 TESTIMONIOS ── {%- endcomment -%}
+  <section class="di section section--s1">
+    <div class="di wrap">
+      <div class="di section-label reveal">
+        <span class="di num">05</span>
+        {{ section.settings.testimonials_label }}
       </div>
-      <div class="di-testimonials-grid">
-        {%- assign ti = 0 -%}
+      <div class="di testimonials__grid">
+        {%- assign t_index = 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'testimonial' -%}
-            {%- assign ti = ti | plus: 1 -%}
-            {%- assign delay_t = 'di-d' | append: ti -%}
-            <div class="di-testimonial di-reveal {{ delay_t }}" {{ block.shopify_attributes }}>
-              <p class="di-testimonial-text">{{ block.settings.quote }}</p>
-              <div class="di-testimonial-author">
-                <div class="di-avatar" aria-hidden="true">{{ block.settings.name | slice: 0 }}</div>
+            {%- assign t_index = t_index | plus: 1 -%}
+            {%- assign delay_class = 'reveal-d' | append: t_index -%}
+            <div class="di testimonial reveal {{ delay_class }}" {{ block.shopify_attributes }}>
+              <p class="di testimonial__text">{{ block.settings.quote }}</p>
+              <div class="di testimonial__author">
+                <div class="di testimonial__avatar">{{ block.settings.name | slice: 0 }}</div>
                 <div>
-                  <p class="di-testimonial-name">{{ block.settings.name }}</p>
-                  <p class="di-testimonial-role">{{ block.settings.role }}</p>
+                  <p class="di testimonial__name">{{ block.settings.name }}</p>
+                  <p class="di testimonial__role">{{ block.settings.role }}</p>
                 </div>
               </div>
-              <div class="di-stars" role="img" aria-label="5 estrellas">
-                <span class="di-star"></span><span class="di-star"></span>
-                <span class="di-star"></span><span class="di-star"></span>
-                <span class="di-star"></span>
+              <div class="di testimonial__stars">
+                <span></span><span></span><span></span><span></span><span></span>
               </div>
             </div>
           {%- endif -%}
@@ -211,78 +1128,71 @@
     </div>
   </section>
 
-  {%- comment -%} ══ 06 PRECIO ══ {%- endcomment -%}
-  <section class="di-offer" id="di-comprar" aria-label="Oferta">
-    <div class="di-wrap">
-      <div class="di-label di-reveal" style="justify-content:center">
-        <span class="di-num">06</span>{{ section.settings.offer_label }}
+  {%- comment -%} ── 06 PRECIO ── {%- endcomment -%}
+  <section class="di offer" id="comprar">
+    <div class="di wrap">
+      <div class="di section-label reveal" style="justify-content:center">
+        <span class="di num">06</span>
+        {{ section.settings.offer_label }}
       </div>
-      <div class="di-offer-inner">
-
-        <div class="di-offer-product di-reveal">
-          <span class="di-offer-name">{{ section.settings.hero_word_sans }} {{ section.settings.hero_word_serif }}</span>
-          <span class="di-offer-subtitle">{{ section.settings.offer_subtitle }}</span>
+      <div class="di offer__inner">
+        <div class="di offer__product reveal">
+          <span class="di offer__name">{{ section.settings.hero_word_sans }} {{ section.settings.hero_word_serif }}</span>
+          <span class="di offer__title-serif">{{ section.settings.offer_subtitle }}</span>
         </div>
-
-        <ul class="di-includes di-reveal di-d2">
+        <ul class="di offer__includes reveal">
           {%- for block in section.blocks -%}
             {%- if block.type == 'include' -%}
               <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
             {%- endif -%}
           {%- endfor -%}
         </ul>
-
-        <div class="di-price-block di-reveal di-d3">
-          <span class="di-price-was">{{ section.settings.price_was }}</span>
-          <span class="di-price-now"><sup>$</sup>{{ section.settings.price_now }}</span>
-          <span class="di-price-context">{{ section.settings.price_context }}</span>
+        <div class="di price-block reveal">
+          <span class="di price-was">{{ section.settings.price_was }}</span>
+          <span class="di price-now">
+            <sup>$</sup>{{ section.settings.price_now }}
+          </span>
+          <span class="di price-context">{{ section.settings.price_context }}</span>
         </div>
-
-        <p class="di-urgency di-reveal di-d4">{{ section.settings.urgency_text }}</p>
-
-        <a href="{{ section.settings.product_url }}"
-           class="di-btn di-btn-primary di-offer-btn di-reveal di-d5"
-           style="width:100%;max-width:360px;display:flex;">
+        <div class="di urgency reveal">{{ section.settings.urgency_text }}</div>
+        <a href="{{ section.settings.product_url }}" class="di btn btn--primary offer__btn reveal">
           {{ section.settings.offer_cta }}
         </a>
-
-        <p class="di-offer-guarantee di-reveal di-d6">{{ section.settings.guarantee_short }}</p>
-
+        <p class="di offer__guarantee reveal">{{ section.settings.guarantee_short }}</p>
       </div>
     </div>
   </section>
 
-  {%- comment -%} ══ 07 GARANTÍA ══ {%- endcomment -%}
-  <section class="di-section di-bg2" aria-label="Garantía">
-    <div class="di-wrap">
-      <div class="di-label di-reveal" style="justify-content:center">
-        <span class="di-num">07</span>Garantía
+  {%- comment -%} ── 07 GARANTÍA ── {%- endcomment -%}
+  <section class="di section section--s2">
+    <div class="di wrap">
+      <div class="di section-label reveal" style="justify-content:center">
+        <span class="di num">07</span>
+        Garantía
       </div>
-      <div class="di-guarantee di-reveal">
-        <p class="di-guarantee-title">{{ section.settings.guarantee_title }}</p>
-        <p class="di-guarantee-text">{{ section.settings.guarantee_text }}</p>
+      <div class="di guarantee reveal">
+        <p class="di guarantee__title">{{ section.settings.guarantee_title }}</p>
+        <p class="di guarantee__text">{{ section.settings.guarantee_text }}</p>
       </div>
     </div>
   </section>
 
-  {%- comment -%} ══ 08 FAQ ══ {%- endcomment -%}
-  <section class="di-section di-bg1" aria-label="Preguntas frecuentes">
-    <div class="di-wrap">
-      <div class="di-label di-reveal">
-        <span class="di-num">08</span>{{ section.settings.faq_label }}
+  {%- comment -%} ── 08 FAQ ── {%- endcomment -%}
+  <section class="di section section--s1">
+    <div class="di wrap">
+      <div class="di section-label reveal">
+        <span class="di num">08</span>
+        {{ section.settings.faq_label }}
       </div>
-      <div class="di-faq" role="list">
+      <div class="di faq">
         {%- for block in section.blocks -%}
           {%- if block.type == 'faq' -%}
-            <div class="di-faq-item di-reveal" role="listitem" {{ block.shopify_attributes }}>
-              <button class="di-faq-trigger"
-                      type="button"
-                      aria-expanded="false"
-                      aria-controls="faq-{{ forloop.index }}">
-                <span class="di-faq-q">{{ block.settings.question }}</span>
-                <span class="di-faq-icon" aria-hidden="true"></span>
+            <div class="di faq__item reveal" {{ block.shopify_attributes }}>
+              <button class="di faq__trigger">
+                <span class="di faq__q">{{ block.settings.question }}</span>
+                <span class="di faq__icon"></span>
               </button>
-              <div class="di-faq-body" id="faq-{{ forloop.index }}">{{ block.settings.answer }}</div>
+              <div class="di faq__body">{{ block.settings.answer }}</div>
             </div>
           {%- endif -%}
         {%- endfor -%}
@@ -290,107 +1200,62 @@
     </div>
   </section>
 
-  {%- comment -%} ══ CTA FINAL ══ {%- endcomment -%}
-  <section class="di-final" aria-label="Llamada a la acción final">
-    <div class="di-wrap">
-      <div class="di-final-inner">
-        <h2 class="di-final-title di-reveal">
+  {%- comment -%} ── CTA FINAL ── {%- endcomment -%}
+  <section class="di final-cta">
+    <div class="di wrap">
+      <div class="di final-cta__inner">
+        <h2 class="di final-cta__title reveal">
           {{ section.settings.final_line1 }}<br>
           <span>{{ section.settings.final_line2 }}</span>
         </h2>
-        <p class="di-final-sub di-reveal di-d2">{{ section.settings.final_sub }}</p>
-        <a href="{{ section.settings.product_url }}"
-           class="di-btn di-btn-primary di-reveal di-d3">{{ section.settings.final_cta }}</a>
-        <p class="di-final-note di-reveal di-d4">{{ section.settings.guarantee_short }}</p>
+        <p class="di final-cta__sub reveal">{{ section.settings.final_sub }}</p>
+        <a href="{{ section.settings.product_url }}" class="di btn btn--primary reveal">
+          {{ section.settings.final_cta }}
+        </a>
+        <p class="di final-cta__note reveal">{{ section.settings.guarantee_short }}</p>
       </div>
     </div>
   </section>
 
-  {%- comment -%} ══ STICKY BAR MOBILE ══ {%- endcomment -%}
-  <div class="di-sticky" id="di-sticky" role="complementary" aria-label="Compra rápida">
-    <div class="di-sticky-info">
-      <span class="di-sticky-name">{{ section.settings.hero_word_sans }} {{ section.settings.hero_word_serif }}</span>
-      <span class="di-sticky-price">Solo ${{ section.settings.price_now }} USD</span>
+  {%- comment -%} ── STICKY BAR MOBILE ── {%- endcomment -%}
+  <div class="di sticky-bar" id="di-sticky">
+    <div class="di sticky-bar__info">
+      <span class="di sticky-bar__name">Disciplina Imparable</span>
+      <span class="di sticky-bar__price">Solo ${{ section.settings.price_now }} USD</span>
     </div>
-    <a href="{{ section.settings.product_url }}" class="di-btn di-btn-primary">{{ section.settings.sticky_cta }}</a>
+    <a href="{{ section.settings.product_url }}" class="di btn btn--primary">
+      {{ section.settings.sticky_cta }}
+    </a>
   </div>
 
 </div>
 
 <script>
 (function () {
-  'use strict';
-  var root = document.getElementById('di-page');
-  if (!root) return;
+  // Scroll reveal
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('#disciplina-imparable .reveal').forEach(function (el) { io.observe(el); });
 
-  // ── Scroll reveal ────────────────────────────────────────────
-  if ('IntersectionObserver' in window) {
-    var revealIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('di-visible');
-          revealIO.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    root.querySelectorAll('.di-reveal').forEach(function (el) { revealIO.observe(el); });
-  } else {
-    root.querySelectorAll('.di-reveal').forEach(function (el) { el.classList.add('di-visible'); });
-  }
-
-  // ── Counter animation ────────────────────────────────────────
-  var counters = root.querySelectorAll('[data-counter]');
-  if ('IntersectionObserver' in window && counters.length) {
-    var counterIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target;
-        var target = parseInt(el.dataset.counter, 10);
-        if (isNaN(target)) return;
-        var suffix = el.dataset.counterSuffix || '';
-        var duration = 1600;
-        var startTime = null;
-        function tick(ts) {
-          if (!startTime) startTime = ts;
-          var progress = Math.min((ts - startTime) / duration, 1);
-          var eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.round(eased * target).toLocaleString() + suffix;
-          if (progress < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-        counterIO.unobserve(el);
-      });
-    }, { threshold: 0.6 });
-    counters.forEach(function (el) { counterIO.observe(el); });
-  }
-
-  // ── FAQ accordion ────────────────────────────────────────────
-  root.querySelectorAll('.di-faq-trigger').forEach(function (btn) {
+  // FAQ accordion
+  document.querySelectorAll('#disciplina-imparable .faq__trigger').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var item = btn.closest('.di-faq-item');
-      var isOpen = item.classList.contains('di-open');
-      root.querySelectorAll('.di-faq-item.di-open').forEach(function (i) {
-        i.classList.remove('di-open');
-        i.querySelector('.di-faq-trigger').setAttribute('aria-expanded', 'false');
-      });
-      if (!isOpen) {
-        item.classList.add('di-open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
+      var item = btn.closest('.faq__item');
+      var open = item.classList.contains('open');
+      document.querySelectorAll('#disciplina-imparable .faq__item').forEach(function (i) { i.classList.remove('open'); });
+      if (!open) item.classList.add('open');
     });
   });
 
-  // ── Sticky bar (solo mobile, aparece al salir del hero) ──────
-  var hero = root.querySelector('.di-hero');
+  // Sticky bar
+  var hero   = document.querySelector('#disciplina-imparable .hero');
   var sticky = document.getElementById('di-sticky');
-  if (hero && sticky && 'IntersectionObserver' in window) {
-    var isMobile = function () { return window.innerWidth <= 640; };
-    new IntersectionObserver(function (entries) {
-      if (!isMobile()) return;
-      sticky.style.display = entries[0].isIntersecting ? 'none' : 'flex';
+  if (hero && sticky) {
+    new IntersectionObserver(function (e) {
+      sticky.style.display = e[0].isIntersecting ? 'none' : 'flex';
     }, { threshold: 0 }).observe(hero);
   }
-
 })();
 </script>
 
@@ -399,123 +1264,106 @@
   "name": "Disciplina Imparable",
   "tag": "section",
   "settings": [
-    { "type": "header", "content": "─── Hero ────────────────────────" },
-    { "type": "text",     "id": "hero_eyebrow",   "label": "Eyebrow",                          "default": "Ebook Premium · Desarrollo Personal" },
-    { "type": "text",     "id": "hero_word_sans",  "label": "Palabra principal (sans-serif)",   "default": "Disciplina" },
-    { "type": "text",     "id": "hero_word_serif", "label": "Palabra acento (serif, itálica)",  "default": "Imparable" },
-    { "type": "textarea", "id": "hero_subtitle",   "label": "Subtítulo",                        "default": "El método que usan las personas más imparables del mundo para convertir sus metas en resultados reales — sin excusas, sin atajos." },
-    { "type": "text",     "id": "hero_cta",        "label": "Botón CTA hero",                   "default": "Obtener el Ebook" },
-    { "type": "url",      "id": "product_url",     "label": "URL del producto / checkout" },
-    { "type": "text",     "id": "proof_number",    "label": "Número social proof",              "default": "5,000+" },
-    { "type": "text",     "id": "proof_text",      "label": "Texto social proof",               "default": "lectores · Garantía 7 días" },
-
-    { "type": "header", "content": "─── Métricas ────────────────────" },
-    { "type": "text", "id": "stat_1_num",    "label": "Métrica 1 — texto a mostrar",  "default": "5,000+",    "info": "Este texto se muestra antes de que cargue la animación." },
-    { "type": "text", "id": "stat_1_raw",    "label": "Métrica 1 — número (solo cifra, ej: 5000)", "default": "5000" },
-    { "type": "text", "id": "stat_1_suffix", "label": "Métrica 1 — sufijo (ej: +, k, %)",           "default": "+" },
-    { "type": "text", "id": "stat_1_label",  "label": "Métrica 1 — etiqueta",         "default": "Lectores" },
-    { "type": "text", "id": "stat_2_num",    "label": "Métrica 2 — texto a mostrar",  "default": "4.9 / 5" },
-    { "type": "text", "id": "stat_2_raw",    "label": "Métrica 2 — número (cifra)",   "default": "" },
-    { "type": "text", "id": "stat_2_suffix", "label": "Métrica 2 — sufijo",           "default": "" },
-    { "type": "text", "id": "stat_2_label",  "label": "Métrica 2 — etiqueta",         "default": "Valoración promedio" },
-    { "type": "text", "id": "stat_3_num",    "label": "Métrica 3 — texto a mostrar",  "default": "30 días" },
-    { "type": "text", "id": "stat_3_raw",    "label": "Métrica 3 — número (cifra)",   "default": "30" },
-    { "type": "text", "id": "stat_3_suffix", "label": "Métrica 3 — sufijo",           "default": "" },
-    { "type": "text", "id": "stat_3_label",  "label": "Métrica 3 — etiqueta",         "default": "Para resultados visibles" },
-
-    { "type": "header", "content": "─── Sección Dolor ───────────────" },
-    { "type": "text",     "id": "pain_label",    "label": "Label sección",  "default": "El Problema" },
-    { "type": "textarea", "id": "pain_headline", "label": "Headline",       "default": "¿Cuántas veces has comenzado algo y no lo has terminado?" },
-    { "type": "textarea", "id": "pain_bridge",   "label": "Texto puente",   "default": "El problema no es tu motivación. Es que nadie te enseñó a construir disciplina." },
-
-    { "type": "header", "content": "─── Sección Solución ────────────" },
-    { "type": "text",     "id": "solution_label",   "label": "Label sección", "default": "La Solución" },
-    { "type": "textarea", "id": "solution_body",    "label": "Cuerpo",        "default": "No es un libro de motivación efímera. Es un sistema probado para construir la mentalidad y los hábitos de las personas más exitosas del mundo." },
-    { "type": "textarea", "id": "solution_promise", "label": "Promesa central (cita destacada)", "default": "En 30 días, tendrás un sistema mental y de acción que cambiará la forma en que te relacionas con tus metas para siempre." },
-
-    { "type": "header", "content": "─── Beneficios ──────────────────" },
-    { "type": "text", "id": "benefits_label", "label": "Label sección", "default": "Lo que Obtienes" },
-
-    { "type": "header", "content": "─── Contenido del Ebook ─────────" },
-    { "type": "text", "id": "contents_label", "label": "Label sección", "default": "Dentro del Ebook" },
-
-    { "type": "header", "content": "─── CTA Intermedio ──────────────" },
-    { "type": "textarea", "id": "mid_cta_text", "label": "Texto",  "default": "¿Listo para construir la versión más imparable de ti mismo?" },
-    { "type": "text",     "id": "mid_cta_btn",  "label": "Botón",  "default": "Sí, Quiero el Ebook →" },
-
-    { "type": "header", "content": "─── Testimonios ─────────────────" },
-    { "type": "text", "id": "testimonials_label", "label": "Label sección", "default": "Resultados Reales" },
-
-    { "type": "header", "content": "─── Precio / Oferta ─────────────" },
-    { "type": "text", "id": "offer_label",    "label": "Label sección",          "default": "Precio de Lanzamiento" },
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Ebook Premium · Desarrollo Personal" },
+    { "type": "text", "id": "hero_word_sans", "label": "Palabra sans-serif (Inter 800)", "default": "Disciplina" },
+    { "type": "text", "id": "hero_word_serif", "label": "Palabra serif italic (Cormorant)", "default": "Imparable" },
+    { "type": "textarea", "id": "hero_subtitle", "label": "Subtítulo", "default": "El método que usan las personas más imparables del mundo para convertir sus metas en resultados reales — sin excusas, sin atajos." },
+    { "type": "text", "id": "hero_cta", "label": "CTA Hero", "default": "Obtener el Ebook" },
+    { "type": "url", "id": "product_url", "label": "URL del producto" },
+    { "type": "text", "id": "proof_number", "label": "Número social proof", "default": "5,000+" },
+    { "type": "text", "id": "proof_text", "label": "Texto social proof", "default": "lectores · Garantía 7 días" },
+    { "type": "header", "content": "Métricas" },
+    { "type": "text", "id": "stat_1_num", "label": "Métrica 1 — Número", "default": "5,000+" },
+    { "type": "text", "id": "stat_1_label", "label": "Métrica 1 — Label", "default": "Lectores" },
+    { "type": "text", "id": "stat_2_num", "label": "Métrica 2 — Número", "default": "4.9 / 5" },
+    { "type": "text", "id": "stat_2_label", "label": "Métrica 2 — Label", "default": "Valoración" },
+    { "type": "text", "id": "stat_3_num", "label": "Métrica 3 — Número", "default": "30 días" },
+    { "type": "text", "id": "stat_3_label", "label": "Métrica 3 — Label", "default": "Para resultados" },
+    { "type": "header", "content": "Sección Dolor" },
+    { "type": "text", "id": "pain_label", "label": "Label de sección", "default": "El Problema" },
+    { "type": "textarea", "id": "pain_headline", "label": "Headline", "default": "¿Cuántas veces has comenzado algo y no lo has terminado?" },
+    { "type": "textarea", "id": "pain_bridge", "label": "Puente hacia solución", "default": "El problema no es tu motivación. Es que nadie te enseñó a construir disciplina." },
+    { "type": "header", "content": "Solución" },
+    { "type": "text", "id": "solution_label", "label": "Label de sección", "default": "La Solución" },
+    { "type": "textarea", "id": "solution_body", "label": "Cuerpo", "default": "No es un libro de motivación efímera. Es un sistema probado para construir la mentalidad y los hábitos de las personas más exitosas del mundo." },
+    { "type": "textarea", "id": "solution_promise", "label": "Promesa (cita con borde gold)", "default": "En 30 días, tendrás un sistema mental y de acción que cambiará la forma en que te relacionas con tus metas para siempre." },
+    { "type": "header", "content": "Beneficios" },
+    { "type": "text", "id": "benefits_label", "label": "Label de sección", "default": "Lo que Obtienes" },
+    { "type": "header", "content": "Contenido del Ebook" },
+    { "type": "text", "id": "contents_label", "label": "Label de sección", "default": "Dentro del Ebook" },
+    { "type": "header", "content": "CTA Intermedio" },
+    { "type": "textarea", "id": "mid_cta_text", "label": "Texto", "default": "¿Listo para construir la versión más imparable de ti mismo?" },
+    { "type": "text", "id": "mid_cta_btn", "label": "Botón", "default": "Sí, Quiero el Ebook →" },
+    { "type": "header", "content": "Testimonios" },
+    { "type": "text", "id": "testimonials_label", "label": "Label de sección", "default": "Resultados Reales" },
+    { "type": "header", "content": "Precio" },
+    { "type": "text", "id": "offer_label", "label": "Label de sección", "default": "Precio de Lanzamiento" },
     { "type": "text", "id": "offer_subtitle", "label": "Subtítulo del producto", "default": "Ebook Digital · Acceso Inmediato" },
-    { "type": "text", "id": "price_was",      "label": "Precio tachado",         "default": "Precio regular: $39.99 USD" },
-    { "type": "text", "id": "price_now",      "label": "Precio actual (número)", "default": "9.99" },
-    { "type": "text", "id": "price_context",  "label": "Contexto precio",        "default": "USD — Menos de lo que cuesta un café" },
-    { "type": "text", "id": "urgency_text",   "label": "Texto de urgencia",      "default": "Precio de lanzamiento · Tiempo limitado" },
-    { "type": "text", "id": "offer_cta",      "label": "CTA de compra",          "default": "Obtener Disciplina Imparable →" },
-    { "type": "text", "id": "sticky_cta",     "label": "CTA sticky/mobile",      "default": "Obtener →" },
-
-    { "type": "header", "content": "─── Garantía ────────────────────" },
-    { "type": "text",     "id": "guarantee_title", "label": "Título",         "default": "7 días sin preguntas" },
-    { "type": "textarea", "id": "guarantee_text",  "label": "Texto completo", "default": "Si en los primeros 7 días sientes que Disciplina Imparable no fue lo que esperabas, te devolvemos el 100% de tu dinero. Sin formularios, sin excusas." },
-    { "type": "text",     "id": "guarantee_short", "label": "Garantía corta (bajo botones)", "default": "Garantía completa de devolución — 7 días, sin preguntas" },
-
-    { "type": "header", "content": "─── FAQ ─────────────────────────" },
-    { "type": "text", "id": "faq_label", "label": "Label sección", "default": "Preguntas" },
-
-    { "type": "header", "content": "─── CTA Final ───────────────────" },
-    { "type": "text",     "id": "final_line1", "label": "Línea 1",            "default": "Tu mejor versión" },
-    { "type": "text",     "id": "final_line2", "label": "Línea 2 (en dorado)","default": "empieza hoy." },
-    { "type": "textarea", "id": "final_sub",   "label": "Subtítulo",          "default": "No mañana. No el lunes. Hoy es el único día que importa." },
-    { "type": "text",     "id": "final_cta",   "label": "Botón",              "default": "Obtener Disciplina Imparable →" }
+    { "type": "text", "id": "price_was", "label": "Precio tachado (texto completo)", "default": "Precio regular: $39.99 USD" },
+    { "type": "text", "id": "price_now", "label": "Precio actual (solo número)", "default": "9.99" },
+    { "type": "text", "id": "price_context", "label": "Contexto de precio", "default": "USD — Menos de lo que cuesta un café" },
+    { "type": "text", "id": "urgency_text", "label": "Texto de urgencia", "default": "Precio de lanzamiento · Tiempo limitado" },
+    { "type": "text", "id": "offer_cta", "label": "CTA oferta", "default": "Obtener Disciplina Imparable →" },
+    { "type": "text", "id": "sticky_cta", "label": "CTA sticky bar", "default": "Obtener →" },
+    { "type": "header", "content": "Garantía" },
+    { "type": "text", "id": "guarantee_title", "label": "Título", "default": "7 días sin preguntas" },
+    { "type": "textarea", "id": "guarantee_text", "label": "Texto completo", "default": "Si en los primeros 7 días sientes que Disciplina Imparable no fue lo que esperabas, te devolvemos el 100% de tu dinero. Sin formularios, sin excusas. Tu riesgo es cero." },
+    { "type": "text", "id": "guarantee_short", "label": "Garantía corta (cerca del CTA)", "default": "Garantía completa de devolución — 7 días, sin preguntas" },
+    { "type": "header", "content": "FAQ" },
+    { "type": "text", "id": "faq_label", "label": "Label de sección", "default": "Preguntas" },
+    { "type": "header", "content": "CTA Final" },
+    { "type": "text", "id": "final_line1", "label": "Línea 1", "default": "Tu mejor versión" },
+    { "type": "text", "id": "final_line2", "label": "Línea 2 (color gold)", "default": "empieza hoy." },
+    { "type": "textarea", "id": "final_sub", "label": "Subtítulo", "default": "No mañana. No el lunes. No cuando tengas tiempo. Hoy es el único día que importa." },
+    { "type": "text", "id": "final_cta", "label": "Botón CTA final", "default": "Obtener Disciplina Imparable →" }
   ],
   "blocks": [
     {
       "type": "pain_point",
       "name": "Punto de Dolor",
       "settings": [
-        { "type": "text", "id": "text", "label": "Texto del punto de dolor", "default": "Comienzas con energía máxima. A las dos semanas lo abandonas todo." }
+        { "type": "text", "id": "text", "label": "Texto", "default": "Comienzas con energía máxima. A las dos semanas lo abandonas todo." }
       ]
     },
     {
       "type": "benefit",
       "name": "Beneficio",
       "settings": [
-        { "type": "text",     "id": "title", "label": "Título del beneficio", "default": "Sistema de Disciplina Probado" },
-        { "type": "textarea", "id": "text",  "label": "Descripción",          "default": "Un método paso a paso para construir hábitos inquebrantables." }
+        { "type": "text", "id": "title", "label": "Título", "default": "Sistema de Disciplina Probado" },
+        { "type": "textarea", "id": "text", "label": "Descripción", "default": "Un método paso a paso para construir hábitos inquebrantables sin depender de la motivación momentánea." }
       ]
     },
     {
       "type": "chapter",
-      "name": "Capítulo del Ebook",
+      "name": "Capítulo",
       "settings": [
-        { "type": "text",     "id": "title", "label": "Título del capítulo", "default": "La Mentalidad del Imparable" },
-        { "type": "textarea", "id": "desc",  "label": "Descripción breve",   "default": "Reprograma tu mente para resistir la comodidad." }
+        { "type": "text", "id": "title", "label": "Título", "default": "La Mentalidad del Imparable" },
+        { "type": "textarea", "id": "desc", "label": "Descripción", "default": "Reprograma tu mente para resistir la comodidad y abrazar el reto como estado natural." }
       ]
     },
     {
       "type": "testimonial",
       "name": "Testimonio",
       "settings": [
-        { "type": "textarea", "id": "quote", "label": "Testimonio",   "default": "Cambió completamente mi relación con mis metas." },
-        { "type": "text",     "id": "name",  "label": "Nombre",       "default": "Carlos M." },
-        { "type": "text",     "id": "role",  "label": "Rol / Contexto","default": "Empresario · México" }
+        { "type": "textarea", "id": "quote", "label": "Cita", "default": "Cambió completamente mi relación con mis metas. No es motivación barata — es un sistema real." },
+        { "type": "text", "id": "name", "label": "Nombre", "default": "Carlos M." },
+        { "type": "text", "id": "role", "label": "Rol · Ciudad", "default": "Empresario · México" }
       ]
     },
     {
       "type": "include",
       "name": "Qué Incluye",
       "settings": [
-        { "type": "text", "id": "text", "label": "Ítem incluido", "default": "Ebook completo en PDF — 150+ páginas" }
+        { "type": "text", "id": "text", "label": "Texto", "default": "Ebook completo en PDF — formato premium, 150+ páginas" }
       ]
     },
     {
       "type": "faq",
-      "name": "Pregunta Frecuente",
+      "name": "FAQ",
       "settings": [
-        { "type": "text",     "id": "question", "label": "Pregunta",   "default": "¿En qué formato recibiré el ebook?" },
-        { "type": "textarea", "id": "answer",   "label": "Respuesta",  "default": "PDF de alta calidad, enviado a tu correo al instante." }
+        { "type": "text", "id": "question", "label": "Pregunta", "default": "¿En qué formato recibiré el ebook?" },
+        { "type": "textarea", "id": "answer", "label": "Respuesta", "default": "PDF de alta calidad, enviado directamente a tu correo. Funciona en cualquier dispositivo." }
       ]
     }
   ],
@@ -523,33 +1371,35 @@
     {
       "name": "Disciplina Imparable Landing",
       "blocks": [
-        { "type": "pain_point", "settings": { "text": "¿Cuántas veces has comenzado algo y no lo has terminado?" } },
-        { "type": "pain_point", "settings": { "text": "¿Cuántos lunes has dicho 'esta semana sí'?" } },
-        { "type": "pain_point", "settings": { "text": "¿Cuántos años llevas esperando el momento perfecto?" } },
-        { "type": "pain_point", "settings": { "text": "¿Cuántas metas terminaron siendo solo buenas intenciones?" } },
-        { "type": "benefit", "settings": { "title": "Sistema anti-procrastinación", "text": "Técnicas probadas para vencer la procrastinación sin depender de la motivación del momento." } },
-        { "type": "benefit", "settings": { "title": "Arquitectura de hábitos", "text": "El método exacto para construir rutinas que se mantienen solas, sin esfuerzo de voluntad constante." } },
-        { "type": "benefit", "settings": { "title": "Mentalidad de élite", "text": "Cómo piensan y actúan las personas que logran lo que se proponen, sin excepción." } },
-        { "type": "benefit", "settings": { "title": "Gestión del tiempo real", "text": "No teoría. El sistema que funciona cuando tienes trabajo, familia y poco tiempo disponible." } },
-        { "type": "benefit", "settings": { "title": "Protocolo de ejecución", "text": "De la intención a la acción en menos de 10 minutos diarios. Consistente y medible." } },
-        { "type": "benefit", "settings": { "title": "Resultados comprobables", "text": "Métricas claras para saber si tu disciplina está creciendo o solo parece estarlo." } },
-        { "type": "chapter", "settings": { "title": "La arquitectura de la disciplina", "desc": "Por qué la fuerza de voluntad es el peor sistema y qué funciona en su lugar." } },
-        { "type": "chapter", "settings": { "title": "El protocolo de los 5 minutos", "desc": "Cómo hacer que el inicio sea imposible de evitar." } },
-        { "type": "chapter", "settings": { "title": "Sistemas sobre motivación", "desc": "Diseña tu entorno para que la acción sea el camino de menor resistencia." } },
-        { "type": "chapter", "settings": { "title": "La identidad que ejecuta", "desc": "Cómo convertirte en el tipo de persona que cumple lo que se propone." } },
-        { "type": "chapter", "settings": { "title": "El plan de 30 días", "desc": "El sistema completo aplicado día a día, desde el día 1 hasta el día 30." } },
-        { "type": "testimonial", "settings": { "quote": "Llevaba 3 años queriendo escribir mi libro. En 6 semanas de aplicar esto, ya tengo los primeros 3 capítulos. No es motivación barata — es un sistema real.", "name": "Carlos M.", "role": "34 años · Empresario · México" } },
-        { "type": "testimonial", "settings": { "quote": "Bajé 12 kilos en 4 meses. No porque encontré una dieta mágica, sino porque finalmente entendí cómo funciona mi mente. Este ebook fue el antes y el después.", "name": "Sofía R.", "role": "28 años · Diseñadora · Argentina" } },
-        { "type": "testimonial", "settings": { "quote": "Lo leí en un fin de semana y cambió completamente mi relación con el trabajo y con mis metas. Honestamente, es el mejor dinero que he invertido en mí mismo.", "name": "Andrés T.", "role": "41 años · Ejecutivo · Colombia" } },
-        { "type": "include", "settings": { "text": "Ebook completo — 180+ páginas en PDF" } },
+        { "type": "pain_point", "settings": { "text": "Comienzas con energía máxima. A las dos semanas lo abandonas todo." } },
+        { "type": "pain_point", "settings": { "text": "Sabes exactamente qué debes hacer. No logras hacerlo de forma consistente." } },
+        { "type": "pain_point", "settings": { "text": "Llevas años esperando el momento perfecto. Ese momento no llega." } },
+        { "type": "pain_point", "settings": { "text": "Ves a otros avanzar. Tú sientes que das vueltas en el mismo círculo." } },
+        { "type": "pain_point", "settings": { "text": "Tu fuerza de voluntad falla cuando más la necesitas." } },
+        { "type": "benefit", "settings": { "title": "Sistema de Disciplina Probado", "text": "Un método paso a paso para construir hábitos inquebrantables sin depender de la motivación momentánea." } },
+        { "type": "benefit", "settings": { "title": "Reprogramación Mental", "text": "Técnicas respaldadas por neurociencia para eliminar la procrastinación desde la raíz, no los síntomas." } },
+        { "type": "benefit", "settings": { "title": "Claridad de Metas", "text": "Aprende a definir metas que realmente te movilicen y cómo mantener el enfoque sin fricciones." } },
+        { "type": "benefit", "settings": { "title": "Energía y Momentum", "text": "El protocolo exacto para mantener energía alta y momentum constante incluso en los días difíciles." } },
+        { "type": "benefit", "settings": { "title": "Mentalidad de Élite", "text": "Los mismos principios de atletas y ejecutivos de alto rendimiento — adaptados a tu vida diaria." } },
+        { "type": "benefit", "settings": { "title": "Plan de 30 Días", "text": "Blueprint semana a semana para implementar cada concepto con fechas, acciones y métricas claras." } },
+        { "type": "chapter", "settings": { "title": "La Mentalidad del Imparable", "desc": "Reprograma tu mente para resistir la comodidad y abrazar el reto como estado natural." } },
+        { "type": "chapter", "settings": { "title": "El Sistema de los 5AM", "desc": "Cómo los más productivos diseñan sus mañanas para dominar el día completo." } },
+        { "type": "chapter", "settings": { "title": "Destruye la Procrastinación", "desc": "La técnica de los 2 minutos y el protocolo anti-distracción que lo cambia todo." } },
+        { "type": "chapter", "settings": { "title": "Hábitos que No Se Rompen", "desc": "El método de habit stacking para construir rutinas que se automatizan sin esfuerzo consciente." } },
+        { "type": "chapter", "settings": { "title": "Resiliencia Brutal", "desc": "Cómo convertir los fracasos en combustible y seguir avanzando cuando todo falla." } },
+        { "type": "chapter", "settings": { "title": "Tu Plan de 30 Días", "desc": "Blueprint semana a semana con metas, acciones y puntos de control concretos." } },
+        { "type": "testimonial", "settings": { "quote": "Llevaba 3 años queriendo escribir mi libro. En 6 semanas ya tengo los primeros 3 capítulos. No es motivación barata — es un sistema real.", "name": "Carlos M.", "role": "Empresario · México" } },
+        { "type": "testimonial", "settings": { "quote": "Bajé 12 kilos en 4 meses. No por una dieta mágica, sino porque finalmente entendí cómo funciona mi mente. Este ebook fue el antes y el después.", "name": "Sofía R.", "role": "Diseñadora · Argentina" } },
+        { "type": "testimonial", "settings": { "quote": "Lo leí en un fin de semana. Cambió completamente mi relación con el trabajo y mis metas. El mejor dinero que he invertido en mí mismo.", "name": "Andrés T.", "role": "Ejecutivo · Colombia" } },
+        { "type": "include", "settings": { "text": "Ebook completo en PDF — formato premium, 150+ páginas" } },
         { "type": "include", "settings": { "text": "Plan de acción de 30 días incluido" } },
-        { "type": "include", "settings": { "text": "Acceso de por vida — actualizaciones incluidas" } },
+        { "type": "include", "settings": { "text": "Descarga inmediata tras la compra" } },
         { "type": "include", "settings": { "text": "Compatible con cualquier dispositivo" } },
-        { "type": "faq", "settings": { "question": "¿Cómo recibo el ebook?", "answer": "Inmediatamente después de tu compra recibirás un email con el link de descarga. El ebook está en formato PDF compatible con cualquier dispositivo, incluyendo Kindle y tablets." } },
-        { "type": "faq", "settings": { "question": "¿Funciona si no tengo mucho tiempo libre?", "answer": "Sí. El sistema está diseñado específicamente para personas que trabajan. El protocolo mínimo requiere solo 10 minutos al día para comenzar a ver resultados." } },
-        { "type": "faq", "settings": { "question": "¿Qué pasa si ya leí otros libros de disciplina?", "answer": "Disciplina Imparable es diferente porque no da motivación vacía. Entrega un sistema concreto que funciona incluso cuando la motivación no aparece." } },
-        { "type": "faq", "settings": { "question": "¿Cuál es la garantía?", "answer": "Garantía total de 7 días. Si no estás satisfecho por cualquier razón, te devolvemos el 100% de tu inversión sin preguntas." } },
-        { "type": "faq", "settings": { "question": "¿El pago es seguro?", "answer": "Sí. El pago es procesado por Shopify con encriptación SSL de 256 bits. Aceptamos tarjetas de crédito, débito y PayPal." } }
+        { "type": "faq", "settings": { "question": "¿En qué formato recibiré el ebook?", "answer": "PDF de alta calidad, enviado directamente a tu correo. Funciona en cualquier dispositivo: teléfono, tablet o computadora." } },
+        { "type": "faq", "settings": { "question": "¿Cuándo lo recibiré?", "answer": "Al instante. Inmediatamente después de confirmar el pago recibirás el enlace de descarga." } },
+        { "type": "faq", "settings": { "question": "¿Qué pasa si no me gusta?", "answer": "Tienes 7 días de garantía completa. Te devolvemos el 100% sin preguntas." } },
+        { "type": "faq", "settings": { "question": "¿Es para mí si nunca he leído desarrollo personal?", "answer": "Sí. Disciplina Imparable está escrito para ser directo y práctico. Solo necesitas las ganas de cambiar." } },
+        { "type": "faq", "settings": { "question": "¿En cuánto tiempo veo resultados?", "answer": "La mayoría reporta cambios notables en los primeros 14 días. El plan está diseñado para resultados en 30 días." } }
       ]
     }
   ]
