@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "disciplina-imparable-landing": {
+      "type": "disciplina-imparable-landing",
+      "disabled": false,
+      "settings": {}
+    }
+  },
+  "order": [
+    "disciplina-imparable-landing"
+  ]
+}

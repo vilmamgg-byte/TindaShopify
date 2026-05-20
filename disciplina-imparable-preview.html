@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disciplina Imparable — Preview Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+  /* ═══════════════════════════════════════════════
+     DESIGN TOKENS
+     Sistema de 8 puntos. Todos los valores son
+     múltiplos de 8px. Sin excepciones.
+  ═══════════════════════════════════════════════ */
+  :root {
+    /* Grid de 8 puntos */
+    --sp-1:  8px;
+    --sp-2:  16px;
+    --sp-3:  24px;
+    --sp-4:  32px;
+    --sp-5:  40px;
+    --sp-6:  48px;
+    --sp-8:  64px;
+    --sp-10: 80px;
+    --sp-12: 96px;
+    --sp-15: 120px;
+    --sp-20: 160px;
+
+    /* Superficies — 5 niveles de profundidad */
+    --s0: #000000;   /* Fondo base */
+    --s1: #080808;   /* Sección primaria */
+    --s2: #0F0F0F;   /* Sección secundaria */
+    --s3: #141414;   /* Cards / hover states */
+    --s4: #1A1A1A;   /* Elevación máxima */
+
+    /* Bordes — estructura, no decoración */
+    --b1: rgba(255,255,255,0.05);   /* Separadores sutiles */
+    --b2: rgba(255,255,255,0.09);   /* Bordes de sección */
+    --b3: rgba(255,255,255,0.16);   /* Bordes activos */
+    --b-gold: rgba(184,151,42,0.25);/* Borde acento */
+
+    /* Tipografía — 3 niveles de jerarquía */
+    --t-primary:   #EFEFEF;
+    --t-secondary: rgba(239,239,239,0.50);
+    --t-tertiary:  rgba(239,239,239,0.28);
+
+    /* Acento — Usado SÓLO en:
+       1. La palabra clave del hero
+       2. Numeración de secciones
+       3. Botones CTA
+       4. El precio
+       Nunca como relleno decorativo. */
+    --gold:      #B8972A;
+    --gold-dim:  rgba(184,151,42,0.08);
+    --gold-mid:  rgba(184,151,42,0.15);
+
+    /* Tipografías */
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans:  'Inter', system-ui, sans-serif;
+
+    /* Contenedor — máximo ancho con padding interno */
+    --max-w:       1200px;
+    --max-w-text:  680px;
+    --max-w-tight: 520px;
+    --gutter:      clamp(24px, 5vw, 80px);
+
+    /* Transiciones */
+    --ease: cubic-bezier(0.25, 0, 0, 1);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--s0);
+    color: var(--t-primary);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Contenedor universal ── */
+  .container {
+    width: 100%;
+    max-width: var(--max-w);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* ══════════════════════════════════════
+     BARRA DE PREVIEW
+     No aparece en producción
+  ══════════════════════════════════════ */
+  .preview-bar {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: var(--s4);
+    border-bottom: 1px solid var(--b-gold);
+    padding: 10px var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+  .preview-bar span {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .preview-bar a {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--t-secondary);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .preview-bar a:hover { color: var(--t-primary); }
+
+  /* ══════════════════════════════════════
+     LABEL DE SECCIÓN
+     Formato: "01 — TÍTULO" en 10px caps
+     Referencia: Linear, Nothing, Braun
+  ══════════════════════════════════════ */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--t-tertiary);
+    margin-bottom: var(--sp-6);
+  }
+  .section-label .num {
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--b1);
+    max-width: 80px;
+  }
+
+  /* ══════════════════════════════════════
+     HERO
+     Composición: centrado vertical,
+     texto alineado al centro en mobile,
+     izquierda en desktop (futuro).
+
+     Tipografía:
+     — "DISCIPLINA" Inter 800, 0px, -0.04em tracking
+     — "Imparable" Cormorant Italic 300, misma altura ópticamente
+     — Línea de división: 1px, 48px de ancho, gold
+     — Subtítulo: Inter 400, 18px, 1.65 leading, max 480px
+
+     Espacio hero: mín 100svh.
+     Padding top: 15% (para que el texto caiga en el tercio superior).
+  ══════════════════════════════════════ */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: clamp(var(--sp-15), 15vh, var(--sp-20)) var(--gutter) var(--sp-20);
+    background: var(--s0);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Ruido de grano — textura industrial, 4% opacidad */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Halo de luz central — 2% opacidad máxima */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: min(800px, 100%);
+    height: 60%;
+    background: radial-gradient(ellipse at top, rgba(184,151,42,0.06) 0%, transparent 65%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Eyebrow — idéntico a Nothing.tech: dots + text */
+  .hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--t-tertiary);
+    margin-bottom: var(--sp-8);
+    opacity: 0;
+    animation: fadeUp 0.9s var(--ease) forwards 0.1s;
+  }
+  .hero__eyebrow::before,
+  .hero__eyebrow::after {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  /* Display type — dos líneas, dos fuentes */
+  .hero__display {
+    margin-bottom: var(--sp-4);
+    opacity: 0;
+    animation: fadeUp 0.9s var(--ease) forwards 0.25s;
+  }
+
+  /* Primera línea: sans-serif negro, caps, tracking negativo */
+  .hero__word-sans {
+    display: block;
+    font-family: var(--sans);
+    font-size: clamp(56px, 11vw, 120px);
+    font-weight: 800;
+    line-height: 0.90;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: var(--t-primary);
+  }
+
+  /* Segunda línea: serif italic, peso 300, mismo tamaño óptico */
+  .hero__word-serif {
+    display: block;
+    font-family: var(--serif);
+    font-size: clamp(68px, 13vw, 148px);
+    font-weight: 300;
+    line-height: 0.85;
+    letter-spacing: -0.01em;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* Línea divisora — 48px, 1px, gold */
+  .hero__rule {
+    width: 48px;
+    height: 1px;
+    background: var(--gold);
+    margin: var(--sp-5) auto;
+    opacity: 0;
+    animation: fadeIn 0.6s var(--ease) forwards 0.5s;
+  }
+
+  .hero__subtitle {
+    font-size: clamp(15px, 2vw, 18px);
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--t-secondary);
+    max-width: var(--max-w-tight);
+    margin-bottom: var(--sp-8);
+    opacity: 0;
+    animation: fadeUp 0.9s var(--ease) forwards 0.6s;
+  }
+
+  /* CTA — sin border-radius (industrial), altura exacta 56px */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    height: 56px;
+    padding: 0 var(--sp-6);
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    white-space: nowrap;
+    border-radius: 0;
+  }
+  .btn--primary {
+    background: var(--gold);
+    color: var(--s0);
+  }
+  .btn--primary:hover {
+    background: #C9A840;
+    transform: translateY(-1px);
+  }
+  .btn--outline {
+    background: transparent;
+    color: var(--t-secondary);
+    border: 1px solid var(--b2);
+  }
+  .btn--outline:hover {
+    border-color: var(--b3);
+    color: var(--t-primary);
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-3);
+    opacity: 0;
+    animation: fadeUp 0.9s var(--ease) forwards 0.75s;
+  }
+
+  .hero__proof {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--t-tertiary);
+  }
+  .hero__proof strong { color: var(--t-secondary); font-weight: 500; }
+
+  /* Indicador scroll — línea animada, no flecha */
+  .scroll-indicator {
+    position: absolute;
+    bottom: var(--sp-5);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+    opacity: 0;
+    animation: fadeIn 1s var(--ease) forwards 1.2s;
+  }
+  .scroll-indicator span {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--t-tertiary);
+  }
+  .scroll-track {
+    width: 1px;
+    height: 48px;
+    background: var(--b2);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-track::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gold);
+    animation: scrollLine 2s var(--ease) infinite 1.5s;
+  }
+
+  /* ══════════════════════════════════════
+     MÉTRICAS / STATS
+     Referencia: Apple specs page
+     — 3 números separados por 1px vertical
+     — Todo en una sola línea horizontal
+     — Sin fondo, solo bordes superior e inferior
+  ══════════════════════════════════════ */
+  .metrics {
+    border-top: 1px solid var(--b1);
+    border-bottom: 1px solid var(--b1);
+    background: var(--s1);
+  }
+  .metrics__inner {
+    display: flex;
+    align-items: stretch;
+  }
+  .metric {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: clamp(var(--sp-5), 5vw, var(--sp-8)) var(--sp-3);
+    border-right: 1px solid var(--b1);
+  }
+  .metric:last-child { border-right: none; }
+  .metric__num {
+    font-family: var(--serif);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--t-primary);
+    letter-spacing: -0.02em;
+  }
+  .metric__label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--t-tertiary);
+  }
+
+  /* ══════════════════════════════════════
+     SECCIÓN BASE
+     Padding vertical: 120px desktop, 80px mobile
+     Las secciones alternan entre s1 y s2.
+     NUNCA dos seguidas del mismo color.
+  ══════════════════════════════════════ */
+  .section {
+    padding-block: clamp(var(--sp-10), 10vw, var(--sp-15));
+  }
+  .section--s1 { background: var(--s1); }
+  .section--s2 { background: var(--s2); }
+  .section--s0 { background: var(--s0); }
+
+  /* ══════════════════════════════════════
+     01 — DOLOR
+     Layout: 2 columnas en desktop
+     Izquierda: label + headline grande
+     Derecha: lista de puntos de dolor
+
+     Referencia: Nothing.tech sección
+     "What makes it different"
+  ══════════════════════════════════════ */
+  .pain__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(var(--sp-8), 6vw, var(--sp-15));
+    align-items: start;
+  }
+  @media (min-width: 800px) {
+    .pain__grid {
+      grid-template-columns: 5fr 7fr;
+    }
+  }
+
+  .pain__headline {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--t-primary);
+    margin-top: var(--sp-1);
+  }
+
+  /* Lista de dolores — sin bullets, con separadores de 1px */
+  .pain__list {
+    list-style: none;
+    border-top: 1px solid var(--b1);
+  }
+  .pain__item {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: var(--sp-3);
+    padding: var(--sp-4) 0;
+    border-bottom: 1px solid var(--b1);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--t-secondary);
+    transition: color 0.2s var(--ease);
+  }
+  .pain__item:hover { color: var(--t-primary); }
+  .pain__item::before {
+    content: '—';
+    color: var(--gold);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  /* Puente hacia la solución */
+  .pain__bridge {
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-8);
+    border-top: 1px solid var(--b1);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+  }
+  .pain__bridge-rule {
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 12px;
+  }
+  .pain__bridge-text {
+    font-family: var(--serif);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--t-primary);
+  }
+
+  /* ══════════════════════════════════════
+     02 — SOLUCIÓN / PROMESA
+     Layout: centrado, ancho máximo 640px
+     El nombre del libro como display type.
+     La promesa en un bloque de cita industrial.
+  ══════════════════════════════════════ */
+  .promise__center {
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .promise__title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: var(--sp-8);
+  }
+  .promise__title .word-a {
+    font-family: var(--sans);
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: var(--t-primary);
+  }
+  .promise__title .word-b {
+    font-family: var(--serif);
+    font-size: clamp(52px, 9vw, 104px);
+    font-weight: 300;
+    line-height: 0.85;
+    letter-spacing: -0.01em;
+    font-style: italic;
+    color: var(--gold);
+  }
+  .promise__body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--t-secondary);
+    margin-bottom: var(--sp-8);
+  }
+
+  /* Bloque de cita — borde izquierdo de 2px gold, sin background */
+  .promise__quote {
+    border-left: 2px solid var(--gold);
+    padding: var(--sp-4) var(--sp-5);
+    text-align: left;
+    font-family: var(--serif);
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--t-primary);
+    background: var(--gold-dim);
+  }
+
+  /* ══════════════════════════════════════
+     03 — BENEFICIOS
+     Referencia: Linear.app features grid
+     — Numeración en gold, 12px, tabular
+     — Título en 18px Inter 600
+     — Descripción en 14px, color secundario
+     — Separadores de 1px entre items
+     — Sin cards, sin sombras, sin iconos emoji
+  ══════════════════════════════════════ */
+  .benefits__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--b1);
+  }
+  @media (min-width: 640px) {
+    .benefits__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 960px) {
+    .benefits__grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .benefit {
+    padding: var(--sp-6) var(--sp-5);
+    border-bottom: 1px solid var(--b1);
+    border-right: 1px solid var(--b1);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    transition: background 0.2s var(--ease);
+  }
+  .benefit:hover { background: var(--s3); }
+
+  .benefit__num {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: var(--sp-1);
+  }
+  .benefit__title {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--t-primary);
+    letter-spacing: -0.01em;
+  }
+  .benefit__text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--t-secondary);
+  }
+
+  /* ══════════════════════════════════════
+     04 — CONTENIDO DEL EBOOK
+     Referencia: Apple specs / tabla técnica
+     — Fila numerada con separador
+     — Número: Cormorant 14px gold
+     — Título: Inter 600 16px
+     — Descripción: Inter 400 14px secundario
+  ══════════════════════════════════════ */
+  .chapters {
+    max-width: var(--max-w-text);
+    margin-inline: auto;
+  }
+  .chapter {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: var(--sp-4);
+    padding-block: var(--sp-5);
+    border-bottom: 1px solid var(--b1);
+    align-items: start;
+  }
+  .chapter:first-child { border-top: 1px solid var(--b1); }
+  .chapter__num {
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    padding-top: 3px;
+    font-variant-numeric: tabular-nums;
+  }
+  .chapter__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--t-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .chapter__desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--t-secondary);
+  }
+
+  /* ══════════════════════════════════════
+     CTA INTERMEDIO — SECCIÓN BREAK
+     Referencia: Nothing.tech CTA block
+     — Fondo oscuro, texto grande centrado
+     — Botón como único elemento de color
+     — Sin imágenes, sin decoración
+  ══════════════════════════════════════ */
+  .mid-cta {
+    padding-block: clamp(var(--sp-10), 10vw, var(--sp-15));
+    background: var(--s0);
+    border-top: 1px solid var(--b1);
+    border-bottom: 1px solid var(--b1);
+    text-align: center;
+  }
+  .mid-cta__text {
+    font-family: var(--serif);
+    font-size: clamp(24px, 4vw, 44px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.25;
+    color: var(--t-primary);
+    max-width: 640px;
+    margin-inline: auto;
+    margin-bottom: var(--sp-8);
+    letter-spacing: -0.01em;
+  }
+
+  /* ══════════════════════════════════════
+     05 — TESTIMONIOS
+     Referencia: Arc.net / testimonios de prensa
+     — Sin cards con bordes en todos los lados
+     — Comilla enorme en background, 15% opacidad
+     — Texto del testimonio en serif italic
+     — Nombre en sans-serif uppercase tracking
+     — Fila de 3 en desktop, separadas por 1px vertical
+  ══════════════════════════════════════ */
+  .testimonials__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--b1);
+  }
+  @media (min-width: 760px) {
+    .testimonials__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .testimonial {
+    position: relative;
+    padding: var(--sp-8) var(--sp-6);
+    border-bottom: 1px solid var(--b1);
+    border-right: 1px solid var(--b1);
+    overflow: hidden;
+  }
+  @media (min-width: 760px) {
+    .testimonial:last-child { border-right: none; }
+  }
+
+  /* Comilla decorativa — posición absoluta, sin interferir */
+  .testimonial::before {
+    content: '\201C';
+    font-family: var(--serif);
+    font-size: 160px;
+    line-height: 1;
+    color: var(--t-primary);
+    opacity: 0.04;
+    position: absolute;
+    top: var(--sp-3);
+    left: var(--sp-4);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .testimonial__text {
+    font-family: var(--serif);
+    font-size: clamp(16px, 2vw, 19px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.65;
+    color: var(--t-secondary);
+    margin-bottom: var(--sp-6);
+    position: relative;
+  }
+
+  .testimonial__author {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  /* Avatar — monograma, sin foto */
+  .testimonial__avatar {
+    width: 32px; height: 32px;
+    background: var(--gold-dim);
+    border: 1px solid var(--b-gold);
+    display: grid;
+    place-items: center;
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .testimonial__name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--t-primary);
+    line-height: 1.3;
+  }
+  .testimonial__role {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--t-tertiary);
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+  }
+  .testimonial__stars {
+    margin-top: var(--sp-4);
+    display: flex;
+    gap: 3px;
+  }
+  .testimonial__stars span {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    transform: rotate(0deg);
+    clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  }
+
+  /* ══════════════════════════════════════
+     06 — PRECIO
+     Referencia: Apple pricing page
+     — Aislado, centrado, mucho espacio
+     — El número del precio es el protagonista
+     — Fuente: Cormorant para el número
+       (serifa = más presencia visual)
+     — Antes: tachado en gris
+     — Después: blanco puro, 96px
+     — Contexto: 13px gris debajo
+     — Todo dentro de un cuadrado centrado
+     — Sin gradientes, sin efectos
+  ══════════════════════════════════════ */
+  .offer {
+    padding-block: clamp(var(--sp-10), 10vw, var(--sp-20));
+    background: var(--s1);
+    text-align: center;
+    border-top: 1px solid var(--b1);
+    border-bottom: 1px solid var(--b1);
+  }
+  .offer__inner {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+  .offer__product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-1);
+    margin-bottom: var(--sp-10);
+  }
+  .offer__name {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--t-tertiary);
+  }
+  .offer__desc {
+    font-family: var(--serif);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--t-primary);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .offer__includes {
+    list-style: none;
+    margin-bottom: var(--sp-10);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--b1);
+  }
+  .offer__includes li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: var(--sp-2);
+    padding: var(--sp-2) 0;
+    border-bottom: 1px solid var(--b1);
+    font-size: 14px;
+    color: var(--t-secondary);
+    text-align: left;
+  }
+  .offer__includes li::before {
+    content: '✓';
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    padding-top: 2px;
+  }
+
+  /* El precio — el único elemento sin reducción tipográfica */
+  .price-block {
+    margin-bottom: var(--sp-8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-1);
+  }
+  .price-was {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--t-tertiary);
+    text-decoration: line-through;
+    letter-spacing: 0.04em;
+  }
+  .price-now {
+    font-family: var(--serif);
+    font-size: clamp(72px, 14vw, 112px);
+    font-weight: 600;
+    line-height: 0.9;
+    color: var(--t-primary);
+    letter-spacing: -0.03em;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .price-now sup {
+    font-size: 0.3em;
+    vertical-align: super;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--t-secondary);
+    margin-top: 12px;
+  }
+  .price-context {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--t-tertiary);
+    letter-spacing: 0.06em;
+  }
+
+  /* Urgencia — sin emoji, texto + indicador puntual */
+  .urgency {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-6);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+  .urgency::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
+
+  .offer__guarantee {
+    margin-top: var(--sp-4);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--t-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+  }
+  .offer__guarantee::before {
+    content: '—';
+    color: var(--b3);
+  }
+
+  /* ══════════════════════════════════════
+     07 — GARANTÍA
+     Sin caja, sin icono grande
+     Solo texto + una línea de separación
+     Referencia: cómo Stripe presenta su SLA
+  ══════════════════════════════════════ */
+  .guarantee {
+    max-width: 560px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .guarantee__title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--t-secondary);
+    margin-bottom: var(--sp-3);
+  }
+  .guarantee__text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--t-tertiary);
+  }
+
+  /* ══════════════════════════════════════
+     08 — FAQ
+     Referencia: Linear.app FAQ
+     — Sin bordes en los lados, solo top/bottom
+     — El + rota 45° al abrir (no cambia a ×)
+     — Respuesta: font-size 14px secundario
+  ══════════════════════════════════════ */
+  .faq {
+    max-width: var(--max-w-text);
+    margin-inline: auto;
+  }
+  .faq__item { border-bottom: 1px solid var(--b1); }
+  .faq__item:first-child { border-top: 1px solid var(--b1); }
+  .faq__trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: var(--sp-5) 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s var(--ease);
+  }
+  .faq__trigger:hover { opacity: 0.8; }
+  .faq__q {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--t-primary);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .faq__icon {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    position: relative;
+    color: var(--gold);
+    transition: transform 0.3s var(--ease);
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    border-radius: 0;
+  }
+  .faq__icon::before { width: 1px; height: 100%; left: 50%; transform: translateX(-50%); }
+  .faq__icon::after  { width: 100%; height: 1px; top: 50%; transform: translateY(-50%); }
+  .faq__item.open .faq__icon { transform: rotate(45deg); }
+  .faq__body {
+    display: none;
+    padding-bottom: var(--sp-5);
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--t-secondary);
+    max-width: 560px;
+  }
+  .faq__item.open .faq__body { display: block; }
+
+  /* ══════════════════════════════════════
+     09 — CTA FINAL
+     Referencia: Apple "Get it today" final block
+     — Solo texto, sin fondo especial
+     — El contraste viene del tamaño tipográfico
+     — Una sola línea en gold al final
+  ══════════════════════════════════════ */
+  .final-cta {
+    padding-block: clamp(var(--sp-15), 15vw, var(--sp-20));
+    background: var(--s0);
+    text-align: center;
+    border-top: 1px solid var(--b1);
+  }
+  .final-cta__inner {
+    max-width: 640px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-6);
+  }
+  .final-cta__title {
+    font-family: var(--serif);
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--t-primary);
+  }
+  .final-cta__title span { color: var(--gold); }
+  .final-cta__sub {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--t-secondary);
+    max-width: 440px;
+  }
+  .final-cta__note {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--t-tertiary);
+    margin-top: var(--sp-2);
+  }
+
+  /* ══════════════════════════════════════
+     STICKY BAR (MOBILE)
+     Aparece sólo en < 640px
+     — Altura exacta: 64px
+     — Sin bordes laterales, solo top 1px
+     — Blur de fondo para profundidad
+  ══════════════════════════════════════ */
+  .sticky-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--b2);
+    z-index: 500;
+    padding: 0 var(--sp-3);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-2);
+  }
+  @media (max-width: 640px) { .sticky-bar { display: flex; } }
+  .sticky-bar__info { display: flex; flex-direction: column; gap: 2px; }
+  .sticky-bar__name { font-size: 13px; font-weight: 600; color: var(--t-primary); letter-spacing: -0.01em; }
+  .sticky-bar__price { font-size: 11px; color: var(--t-tertiary); }
+  .sticky-bar .btn { height: 40px; padding: 0 var(--sp-4); font-size: 11px; }
+
+  /* ══════════════════════════════════════
+     KEYFRAMES
+  ══════════════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes scrollLine {
+    0%   { top: -100%; }
+    100% { top: 100%; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ══════════════════════════════════════
+     SCROLL ANIMATION
+  ══════════════════════════════════════ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* Delays escalonados para grids */
+  .reveal-d1 { transition-delay: 0.05s; }
+  .reveal-d2 { transition-delay: 0.10s; }
+  .reveal-d3 { transition-delay: 0.15s; }
+  .reveal-d4 { transition-delay: 0.20s; }
+  .reveal-d5 { transition-delay: 0.25s; }
+  .reveal-d6 { transition-delay: 0.30s; }
+
+  /* Mobile bottom padding para sticky bar */
+  @media (max-width: 640px) {
+    body { padding-bottom: 64px; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ─── BARRA DE PREVIEW ─────────────────────────────── -->
+<div class="preview-bar">
+  <span>Preview — Disciplina Imparable</span>
+  <a href="#comprar">↓ Ver precio</a>
+</div>
+
+<!-- ─── HERO ─────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero__inner">
+
+    <span class="hero__eyebrow">Ebook Premium · Desarrollo Personal</span>
+
+    <div class="hero__display">
+      <span class="hero__word-sans">Disciplina</span>
+      <span class="hero__word-serif">Imparable</span>
+    </div>
+
+    <div class="hero__rule"></div>
+
+    <p class="hero__subtitle">
+      El método que usan las personas más imparables del mundo para convertir sus metas en resultados reales — sin excusas, sin atajos, sin motivación efímera.
+    </p>
+
+    <div class="hero__cta">
+      <a href="#comprar" class="btn btn--primary">
+        Obtener el Ebook
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <span class="hero__proof"><strong>5,000+</strong> lectores · Garantía 7 días</span>
+    </div>
+
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-track"></div>
+  </div>
+</section>
+
+<!-- ─── MÉTRICAS ─────────────────────────────────────── -->
+<div class="metrics">
+  <div class="metrics__inner container">
+    <div class="metric">
+      <span class="metric__num">5,000+</span>
+      <span class="metric__label">Lectores</span>
+    </div>
+    <div class="metric">
+      <span class="metric__num">4.9 / 5</span>
+      <span class="metric__label">Valoración</span>
+    </div>
+    <div class="metric">
+      <span class="metric__num">30 días</span>
+      <span class="metric__label">Para resultados</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 01 DOLOR ──────────────────────────────────────── -->
+<section class="section section--s2">
+  <div class="container">
+    <div class="pain__grid">
+
+      <div>
+        <div class="section-label reveal">
+          <span class="num">01</span>
+          El Problema
+        </div>
+        <h2 class="pain__headline reveal">
+          ¿Cuántas veces has comenzado algo y no lo has terminado?
+        </h2>
+      </div>
+
+      <div>
+        <ul class="pain__list">
+          <li class="pain__item reveal reveal-d1">Comienzas con energía máxima. A las dos semanas lo abandonas todo.</li>
+          <li class="pain__item reveal reveal-d2">Sabes exactamente qué debes hacer. No logras hacerlo de forma consistente.</li>
+          <li class="pain__item reveal reveal-d3">Llevas años esperando el momento perfecto. Ese momento no llega.</li>
+          <li class="pain__item reveal reveal-d4">Ves a otros avanzar. Tú sientes que das vueltas en el mismo círculo.</li>
+          <li class="pain__item reveal reveal-d5">Tu fuerza de voluntad falla cuando más la necesitas.</li>
+        </ul>
+
+        <div class="pain__bridge reveal">
+          <div class="pain__bridge-rule"></div>
+          <p class="pain__bridge-text">
+            El problema no es tu motivación.<br>Es que nadie te enseñó a construir disciplina.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── 02 SOLUCIÓN ───────────────────────────────────── -->
+<section class="section section--s0">
+  <div class="container">
+    <div class="section-label reveal" style="justify-content: center;">
+      <span class="num">02</span>
+      La Solución
+    </div>
+
+    <div class="promise__center">
+      <div class="promise__title reveal">
+        <span class="word-a">Disciplina</span>
+        <span class="word-b">Imparable</span>
+      </div>
+
+      <p class="promise__body reveal">
+        No es un libro de motivación efímera. Es un sistema probado para construir la mentalidad y los hábitos de las personas más exitosas del mundo. Sin teoría vacía — solo el método exacto.
+      </p>
+
+      <blockquote class="promise__quote reveal">
+        En 30 días, tendrás un sistema mental y de acción que cambiará la forma en que te relacionas con tus metas para siempre.
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 03 BENEFICIOS ──────────────────────────────────── -->
+<section class="section section--s1">
+  <div class="container">
+    <div class="section-label reveal">
+      <span class="num">03</span>
+      Lo que Obtienes
+    </div>
+
+    <div class="benefits__grid">
+      <div class="benefit reveal reveal-d1">
+        <span class="benefit__num">01</span>
+        <h3 class="benefit__title">Sistema de Disciplina Probado</h3>
+        <p class="benefit__text">Un método paso a paso para construir hábitos inquebrantables sin depender de la motivación momentánea.</p>
+      </div>
+      <div class="benefit reveal reveal-d2">
+        <span class="benefit__num">02</span>
+        <h3 class="benefit__title">Reprogramación Mental</h3>
+        <p class="benefit__text">Técnicas respaldadas por neurociencia para eliminar la procrastinación desde la raíz, no los síntomas.</p>
+      </div>
+      <div class="benefit reveal reveal-d3">
+        <span class="benefit__num">03</span>
+        <h3 class="benefit__title">Claridad de Metas</h3>
+        <p class="benefit__text">Aprende a definir metas que realmente te movilicen y cómo mantener el enfoque sin fricciones externas.</p>
+      </div>
+      <div class="benefit reveal reveal-d4">
+        <span class="benefit__num">04</span>
+        <h3 class="benefit__title">Energía y Momentum</h3>
+        <p class="benefit__text">El protocolo exacto para mantener energía alta y momentum constante incluso en los días difíciles.</p>
+      </div>
+      <div class="benefit reveal reveal-d5">
+        <span class="benefit__num">05</span>
+        <h3 class="benefit__title">Mentalidad de Élite</h3>
+        <p class="benefit__text">Los mismos principios que usan atletas y ejecutivos de alto rendimiento — adaptados a tu vida diaria.</p>
+      </div>
+      <div class="benefit reveal reveal-d6">
+        <span class="benefit__num">06</span>
+        <h3 class="benefit__title">Plan de 30 Días</h3>
+        <p class="benefit__text">Un blueprint semana a semana para implementar cada concepto con fechas, acciones y métricas claras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 04 CONTENIDO ──────────────────────────────────── -->
+<section class="section section--s2">
+  <div class="container">
+    <div class="section-label reveal">
+      <span class="num">04</span>
+      Dentro del Ebook
+    </div>
+
+    <div class="chapters">
+      <div class="chapter reveal">
+        <span class="chapter__num">01</span>
+        <div>
+          <p class="chapter__title">La Mentalidad del Imparable</p>
+          <p class="chapter__desc">Reprograma tu mente para resistir la comodidad y abrazar el reto como estado natural.</p>
+        </div>
+      </div>
+      <div class="chapter reveal reveal-d1">
+        <span class="chapter__num">02</span>
+        <div>
+          <p class="chapter__title">El Sistema de los 5AM</p>
+          <p class="chapter__desc">Cómo las personas más productivas diseñan sus mañanas para dominar el día completo.</p>
+        </div>
+      </div>
+      <div class="chapter reveal reveal-d2">
+        <span class="chapter__num">03</span>
+        <div>
+          <p class="chapter__title">Destruye la Procrastinación</p>
+          <p class="chapter__desc">La técnica de los 2 minutos y el protocolo anti-distracción que lo cambia todo desde el día uno.</p>
+        </div>
+      </div>
+      <div class="chapter reveal reveal-d3">
+        <span class="chapter__num">04</span>
+        <div>
+          <p class="chapter__title">Hábitos que No Se Rompen</p>
+          <p class="chapter__desc">El método de habit stacking para construir rutinas que se automatizan sin esfuerzo consciente.</p>
+        </div>
+      </div>
+      <div class="chapter reveal reveal-d4">
+        <span class="chapter__num">05</span>
+        <div>
+          <p class="chapter__title">Resiliencia Brutal</p>
+          <p class="chapter__desc">Cómo convertir los fracasos en combustible y seguir avanzando cuando todo conspira en tu contra.</p>
+        </div>
+      </div>
+      <div class="chapter reveal reveal-d5">
+        <span class="chapter__num">06</span>
+        <div>
+          <p class="chapter__title">Tu Plan de 30 Días</p>
+          <p class="chapter__desc">Blueprint semana a semana para implementar lo aprendido con metas, acciones y puntos de control.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA INTERMEDIO ────────────────────────────────── -->
+<div class="mid-cta">
+  <div class="container">
+    <p class="mid-cta__text reveal">
+      ¿Listo para construir la versión más imparable de ti mismo?
+    </p>
+    <a href="#comprar" class="btn btn--primary reveal">Sí, Quiero el Ebook →</a>
+  </div>
+</div>
+
+<!-- ─── 05 TESTIMONIOS ────────────────────────────────── -->
+<section class="section section--s1">
+  <div class="container">
+    <div class="section-label reveal">
+      <span class="num">05</span>
+      Resultados Reales
+    </div>
+
+    <div class="testimonials__grid">
+      <div class="testimonial reveal">
+        <p class="testimonial__text">"Llevaba 3 años queriendo escribir mi libro. En 6 semanas de aplicar esto, ya tengo los primeros 3 capítulos. No es motivación barata — es un sistema real."</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">C</div>
+          <div>
+            <p class="testimonial__name">Carlos M.</p>
+            <p class="testimonial__role">Empresario · México</p>
+          </div>
+        </div>
+        <div class="testimonial__stars">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="testimonial reveal reveal-d2">
+        <p class="testimonial__text">"Bajé 12 kilos en 4 meses. No por una dieta mágica, sino porque finalmente entendí cómo funciona mi mente. Este ebook fue el antes y el después."</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">S</div>
+          <div>
+            <p class="testimonial__name">Sofía R.</p>
+            <p class="testimonial__role">Diseñadora · Argentina</p>
+          </div>
+        </div>
+        <div class="testimonial__stars">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="testimonial reveal reveal-d4">
+        <p class="testimonial__text">"Lo leí en un fin de semana. Cambió completamente mi relación con el trabajo y mis metas. Honestamente, el mejor dinero que he invertido en mí mismo."</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">A</div>
+          <div>
+            <p class="testimonial__name">Andrés T.</p>
+            <p class="testimonial__role">Ejecutivo · Colombia</p>
+          </div>
+        </div>
+        <div class="testimonial__stars">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 06 PRECIO ─────────────────────────────────────── -->
+<section class="offer" id="comprar">
+  <div class="container">
+    <div class="section-label reveal" style="justify-content: center;">
+      <span class="num">06</span>
+      Precio de Lanzamiento
+    </div>
+
+    <div class="offer__inner">
+      <div class="offer__product reveal">
+        <span class="offer__name">Disciplina Imparable</span>
+        <span class="offer__desc">Ebook Digital · Acceso Inmediato</span>
+      </div>
+
+      <ul class="offer__includes reveal">
+        <li>Ebook completo en PDF — formato premium, 150+ páginas</li>
+        <li>Plan de acción de 30 días incluido</li>
+        <li>Descarga inmediata tras la compra</li>
+        <li>Compatible con cualquier dispositivo</li>
+      </ul>
+
+      <div class="price-block reveal">
+        <span class="price-was">Precio regular: $39.99 USD</span>
+        <span class="price-now">
+          <sup>$</sup>9.99
+        </span>
+        <span class="price-context">USD — Menos de lo que cuesta un café</span>
+      </div>
+
+      <div class="urgency reveal">
+        Precio de lanzamiento · Tiempo limitado
+      </div>
+
+      <a href="#" class="btn btn--primary reveal" style="width: 100%; max-width: 360px; margin: 0 auto;">
+        Obtener Disciplina Imparable →
+      </a>
+
+      <p class="offer__guarantee reveal">
+        Garantía completa de devolución — 7 días, sin preguntas
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 07 GARANTÍA ───────────────────────────────────── -->
+<section class="section section--s2">
+  <div class="container">
+    <div class="section-label reveal" style="justify-content: center;">
+      <span class="num">07</span>
+      Garantía
+    </div>
+    <div class="guarantee reveal">
+      <p class="guarantee__title">7 días sin preguntas</p>
+      <p class="guarantee__text">
+        Si en los primeros 7 días sientes que Disciplina Imparable no fue lo que esperabas, te devolvemos el 100% de tu dinero. Sin formularios, sin excusas, sin preguntas. Tu riesgo es cero.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 08 FAQ ─────────────────────────────────────────── -->
+<section class="section section--s1">
+  <div class="container">
+    <div class="section-label reveal">
+      <span class="num">08</span>
+      Preguntas
+    </div>
+
+    <div class="faq">
+      <div class="faq__item reveal">
+        <button class="faq__trigger">
+          <span class="faq__q">¿En qué formato recibiré el ebook?</span>
+          <span class="faq__icon"></span>
+        </button>
+        <div class="faq__body">PDF de alta calidad, enviado directamente a tu correo. Funciona en cualquier dispositivo: teléfono, tablet o computadora.</div>
+      </div>
+      <div class="faq__item reveal reveal-d1">
+        <button class="faq__trigger">
+          <span class="faq__q">¿Cuándo recibiré el ebook?</span>
+          <span class="faq__icon"></span>
+        </button>
+        <div class="faq__body">Al instante. Inmediatamente después de confirmar el pago recibirás el enlace de descarga. No hay esperas ni procesos manuales.</div>
+      </div>
+      <div class="faq__item reveal reveal-d2">
+        <button class="faq__trigger">
+          <span class="faq__q">¿Qué pasa si no me gusta?</span>
+          <span class="faq__icon"></span>
+        </button>
+        <div class="faq__body">Tienes 7 días de garantía completa. Si por cualquier razón sientes que no fue lo que esperabas, te devolvemos el 100% sin preguntas.</div>
+      </div>
+      <div class="faq__item reveal reveal-d3">
+        <button class="faq__trigger">
+          <span class="faq__q">¿Es para mí si nunca he leído desarrollo personal?</span>
+          <span class="faq__icon"></span>
+        </button>
+        <div class="faq__body">Sí. Disciplina Imparable está escrito para ser directo y práctico. No necesitas conocimientos previos, solo las ganas de cambiar.</div>
+      </div>
+      <div class="faq__item reveal reveal-d4">
+        <button class="faq__trigger">
+          <span class="faq__q">¿En cuánto tiempo veo resultados?</span>
+          <span class="faq__icon"></span>
+        </button>
+        <div class="faq__body">La mayoría reporta cambios notables en sus rutinas en los primeros 14 días. El plan incluido está diseñado para resultados concretos en 30 días.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA FINAL ──────────────────────────────────────── -->
+<section class="final-cta">
+  <div class="container">
+    <div class="final-cta__inner">
+      <h2 class="final-cta__title reveal">
+        Tu mejor versión<br>
+        <span>empieza hoy.</span>
+      </h2>
+      <p class="final-cta__sub reveal">
+        No mañana. No el lunes. No cuando tengas tiempo.<br>
+        Hoy es el único día que importa.
+      </p>
+      <a href="#comprar" class="btn btn--primary reveal">
+        Obtener Disciplina Imparable →
+      </a>
+      <p class="final-cta__note reveal">Garantía 7 días · Acceso inmediato · $9.99 USD</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STICKY BAR (mobile) ───────────────────────────── -->
+<div class="sticky-bar" id="sticky">
+  <div class="sticky-bar__info">
+    <span class="sticky-bar__name">Disciplina Imparable</span>
+    <span class="sticky-bar__price">Solo $9.99 USD</span>
+  </div>
+  <a href="#comprar" class="btn btn--primary">Obtener →</a>
+</div>
+
+<script>
+  // ── Scroll reveal ────────────────────────────────────
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ── FAQ accordion ────────────────────────────────────
+  document.querySelectorAll('.faq__trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq__item');
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq__item').forEach(i => i.classList.remove('open'));
+      if (!open) item.classList.add('open');
+    });
+  });
+
+  // ── Sticky bar — aparece al salir del hero ───────────
+  const hero = document.querySelector('.hero');
+  const bar  = document.getElementById('sticky');
+  if (hero && bar) {
+    new IntersectionObserver(e => {
+      bar.style.display = e[0].isIntersecting ? 'none' : 'flex';
+    }, { threshold: 0 }).observe(hero);
+  }
+</script>
+</body>
+</html>
