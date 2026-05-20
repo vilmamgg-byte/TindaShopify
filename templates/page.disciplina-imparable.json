@@ -2,11 +2,239 @@
   "sections": {
     "disciplina-imparable-landing": {
       "type": "disciplina-imparable-landing",
-      "disabled": false,
-      "settings": {}
+      "settings": {
+        "hero_eyebrow": "Ebook Premium · Desarrollo Personal",
+        "hero_word_sans": "Disciplina",
+        "hero_word_serif": "Imparable",
+        "hero_subtitle": "El método que usan las personas más imparables del mundo para convertir sus metas en resultados reales — sin excusas, sin atajos, sin motivación efímera.",
+        "hero_cta": "Obtener el Ebook",
+        "product_url": "",
+        "proof_number": "5,000+",
+        "proof_text": "lectores · Garantía 7 días",
+        "stat_1_num": "5,000+",
+        "stat_1_label": "Lectores",
+        "stat_2_num": "4.9 / 5",
+        "stat_2_label": "Valoración",
+        "stat_3_num": "30 días",
+        "stat_3_label": "Para resultados",
+        "pain_label": "El Problema",
+        "pain_headline": "¿Cuántas veces has comenzado algo y no lo has terminado?",
+        "pain_bridge": "El problema no es tu motivación. Es que nadie te enseñó a construir disciplina.",
+        "solution_label": "La Solución",
+        "solution_body": "No es un libro de motivación efímera. Es un sistema probado para construir la mentalidad y los hábitos de las personas más exitosas del mundo. Sin teoría vacía — solo el método exacto.",
+        "solution_promise": "En 30 días, tendrás un sistema mental y de acción que cambiará la forma en que te relacionas con tus metas para siempre.",
+        "benefits_label": "Lo que Obtienes",
+        "contents_label": "Dentro del Ebook",
+        "mid_cta_text": "¿Listo para construir la versión más imparable de ti mismo?",
+        "mid_cta_btn": "Sí, Quiero el Ebook →",
+        "testimonials_label": "Resultados Reales",
+        "offer_label": "Precio de Lanzamiento",
+        "offer_subtitle": "Ebook Digital · Acceso Inmediato",
+        "price_was": "Precio regular: $39.99 USD",
+        "price_now": "9.99",
+        "price_context": "USD — Menos de lo que cuesta un café",
+        "urgency_text": "Precio de lanzamiento · Tiempo limitado",
+        "offer_cta": "Obtener Disciplina Imparable →",
+        "sticky_cta": "Obtener →",
+        "guarantee_title": "7 días sin preguntas",
+        "guarantee_text": "Si en los primeros 7 días sientes que Disciplina Imparable no fue lo que esperabas, te devolvemos el 100% de tu dinero. Sin formularios, sin excusas. Tu riesgo es cero.",
+        "guarantee_short": "Garantía completa de devolución — 7 días, sin preguntas",
+        "faq_label": "Preguntas",
+        "final_line1": "Tu mejor versión",
+        "final_line2": "empieza hoy.",
+        "final_sub": "No mañana. No el lunes. No cuando tengas tiempo. Hoy es el único día que importa.",
+        "final_cta": "Obtener Disciplina Imparable →"
+      },
+      "blocks": {
+        "pain-1": {
+          "type": "pain_point",
+          "settings": { "text": "Comienzas con energía máxima. A las dos semanas lo abandonas todo." }
+        },
+        "pain-2": {
+          "type": "pain_point",
+          "settings": { "text": "Sabes exactamente qué debes hacer. No logras hacerlo de forma consistente." }
+        },
+        "pain-3": {
+          "type": "pain_point",
+          "settings": { "text": "Llevas años esperando el momento perfecto. Ese momento no llega." }
+        },
+        "pain-4": {
+          "type": "pain_point",
+          "settings": { "text": "Ves a otros avanzar. Tú sientes que das vueltas en el mismo círculo." }
+        },
+        "pain-5": {
+          "type": "pain_point",
+          "settings": { "text": "Tu fuerza de voluntad falla cuando más la necesitas." }
+        },
+        "benefit-1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Sistema de Disciplina Probado",
+            "text": "Un método paso a paso para construir hábitos inquebrantables sin depender de la motivación momentánea."
+          }
+        },
+        "benefit-2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Reprogramación Mental",
+            "text": "Técnicas respaldadas por neurociencia para eliminar la procrastinación desde la raíz, no los síntomas."
+          }
+        },
+        "benefit-3": {
+          "type": "benefit",
+          "settings": {
+            "title": "Claridad de Metas",
+            "text": "Aprende a definir metas que realmente te movilicen y cómo mantener el enfoque sin fricciones."
+          }
+        },
+        "benefit-4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Energía y Momentum",
+            "text": "El protocolo exacto para mantener energía alta y momentum constante incluso en los días difíciles."
+          }
+        },
+        "benefit-5": {
+          "type": "benefit",
+          "settings": {
+            "title": "Mentalidad de Élite",
+            "text": "Los mismos principios de atletas y ejecutivos de alto rendimiento — adaptados a tu vida diaria."
+          }
+        },
+        "benefit-6": {
+          "type": "benefit",
+          "settings": {
+            "title": "Plan de 30 Días",
+            "text": "Blueprint semana a semana para implementar cada concepto con fechas, acciones y métricas claras."
+          }
+        },
+        "chapter-1": {
+          "type": "chapter",
+          "settings": {
+            "title": "La Mentalidad del Imparable",
+            "desc": "Reprograma tu mente para resistir la comodidad y abrazar el reto como estado natural."
+          }
+        },
+        "chapter-2": {
+          "type": "chapter",
+          "settings": {
+            "title": "El Sistema de los 5AM",
+            "desc": "Cómo los más productivos diseñan sus mañanas para dominar el día completo."
+          }
+        },
+        "chapter-3": {
+          "type": "chapter",
+          "settings": {
+            "title": "Destruye la Procrastinación",
+            "desc": "La técnica de los 2 minutos y el protocolo anti-distracción que lo cambia todo."
+          }
+        },
+        "chapter-4": {
+          "type": "chapter",
+          "settings": {
+            "title": "Hábitos que No Se Rompen",
+            "desc": "El método de habit stacking para construir rutinas que se automatizan sin esfuerzo consciente."
+          }
+        },
+        "chapter-5": {
+          "type": "chapter",
+          "settings": {
+            "title": "Resiliencia Brutal",
+            "desc": "Cómo convertir los fracasos en combustible y seguir avanzando cuando todo falla."
+          }
+        },
+        "chapter-6": {
+          "type": "chapter",
+          "settings": {
+            "title": "Tu Plan de 30 Días",
+            "desc": "Blueprint semana a semana con metas, acciones y puntos de control concretos."
+          }
+        },
+        "testimonial-1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Llevaba 3 años queriendo escribir mi libro. En 6 semanas ya tengo los primeros 3 capítulos. No es motivación barata — es un sistema real.",
+            "name": "Carlos M.",
+            "role": "Empresario · México"
+          }
+        },
+        "testimonial-2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Bajé 12 kilos en 4 meses. No por una dieta mágica, sino porque finalmente entendí cómo funciona mi mente. Este ebook fue el antes y el después.",
+            "name": "Sofía R.",
+            "role": "Diseñadora · Argentina"
+          }
+        },
+        "testimonial-3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Lo leí en un fin de semana. Cambió completamente mi relación con el trabajo y mis metas. El mejor dinero que he invertido en mí mismo.",
+            "name": "Andrés T.",
+            "role": "Ejecutivo · Colombia"
+          }
+        },
+        "include-1": {
+          "type": "include",
+          "settings": { "text": "Ebook completo en PDF — formato premium, 150+ páginas" }
+        },
+        "include-2": {
+          "type": "include",
+          "settings": { "text": "Plan de acción de 30 días incluido" }
+        },
+        "include-3": {
+          "type": "include",
+          "settings": { "text": "Descarga inmediata tras la compra" }
+        },
+        "include-4": {
+          "type": "include",
+          "settings": { "text": "Compatible con cualquier dispositivo" }
+        },
+        "faq-1": {
+          "type": "faq",
+          "settings": {
+            "question": "¿En qué formato recibiré el ebook?",
+            "answer": "PDF de alta calidad, enviado directamente a tu correo. Funciona en cualquier dispositivo: teléfono, tablet o computadora."
+          }
+        },
+        "faq-2": {
+          "type": "faq",
+          "settings": {
+            "question": "¿Cuándo lo recibiré?",
+            "answer": "Al instante. Inmediatamente después de confirmar el pago recibirás el enlace de descarga. No hay esperas ni procesos manuales."
+          }
+        },
+        "faq-3": {
+          "type": "faq",
+          "settings": {
+            "question": "¿Qué pasa si no me gusta?",
+            "answer": "Tienes 7 días de garantía completa. Si por cualquier razón sientes que no fue lo que esperabas, te devolvemos el 100% sin preguntas."
+          }
+        },
+        "faq-4": {
+          "type": "faq",
+          "settings": {
+            "question": "¿Es para mí si nunca he leído sobre desarrollo personal?",
+            "answer": "Sí. Disciplina Imparable está escrito para ser directo y práctico. No necesitas conocimientos previos, solo las ganas de cambiar."
+          }
+        },
+        "faq-5": {
+          "type": "faq",
+          "settings": {
+            "question": "¿En cuánto tiempo veo resultados?",
+            "answer": "La mayoría reporta cambios notables en sus rutinas en los primeros 14 días. El plan incluido está diseñado para resultados concretos en 30 días."
+          }
+        }
+      },
+      "block_order": [
+        "pain-1", "pain-2", "pain-3", "pain-4", "pain-5",
+        "benefit-1", "benefit-2", "benefit-3", "benefit-4", "benefit-5", "benefit-6",
+        "chapter-1", "chapter-2", "chapter-3", "chapter-4", "chapter-5", "chapter-6",
+        "testimonial-1", "testimonial-2", "testimonial-3",
+        "include-1", "include-2", "include-3", "include-4",
+        "faq-1", "faq-2", "faq-3", "faq-4", "faq-5"
+      ]
     }
   },
-  "order": [
-    "disciplina-imparable-landing"
-  ]
+  "order": ["disciplina-imparable-landing"]
 }
