@@ -102,48 +102,74 @@
   border-radius: 0;
 }
 
-/* ── Botón primario — glow vectorial ── */
+/* ── Botón primario — 3D + resplandor dorado ── */
 .di .btn--primary {
   position: relative;
   overflow: hidden;
-  background: var(--gold);
-  color: var(--s0);
-  border: 1px solid rgba(201, 168, 76, 0.55);
+  background: linear-gradient(180deg, #D4AF47 0%, #B8921E 100%);
+  color: #0A0A0A;
+  border: none;
+  border-radius: 3px;
+  /* borde inferior = profundidad física 3D */
   box-shadow:
-    0 0 10px rgba(185, 151, 42, 0.45),
-    0 0 28px rgba(185, 151, 42, 0.22),
-    0 0 55px rgba(185, 151, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    0 5px 0 #7A5E0E,
+    0 6px 2px rgba(0,0,0,0.5),
+    0 0 18px rgba(185,151,42,0.45),
+    0 0 40px rgba(185,151,42,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.30);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
+/* brillo superior (cara del botón) */
 .di .btn--primary::before {
   content: '';
   position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.18) 0%,
+    rgba(255,255,255,0.00) 55%
+  );
+  pointer-events: none;
+}
+/* shimmer animado */
+.di .btn--primary::after {
+  content: '';
+  position: absolute;
   top: 0;
-  left: -110%;
-  width: 55%;
+  left: -120%;
+  width: 50%;
   height: 100%;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.38) 50%,
+    rgba(255,255,255,0.32) 50%,
     transparent 100%
   );
-  animation: di-btn-shimmer 3.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: di-btn-shimmer 3.5s ease infinite;
   pointer-events: none;
 }
 @keyframes di-btn-shimmer {
-  0%   { left: -110%; }
-  55%, 100% { left: 160%; }
+  0%        { left: -120%; }
+  60%, 100% { left: 170%; }
 }
 .di .btn--primary:hover {
-  background: #C9A840;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow:
-    0 0 18px rgba(185, 151, 42, 0.65),
-    0 0 42px rgba(185, 151, 42, 0.32),
-    0 0 75px rgba(185, 151, 42, 0.13),
-    0 6px 20px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    0 6px 0 #7A5E0E,
+    0 8px 4px rgba(0,0,0,0.5),
+    0 0 28px rgba(185,151,42,0.70),
+    0 0 60px rgba(185,151,42,0.35),
+    0 0 90px rgba(185,151,42,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.30);
+}
+/* al presionar: baja y la sombra se achica = se "hunde" */
+.di .btn--primary:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 1px 0 #7A5E0E,
+    0 2px 2px rgba(0,0,0,0.4),
+    0 0 14px rgba(185,151,42,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.20);
 }
 
 .di .btn--outline { background: transparent; color: var(--t-secondary); border: 1px solid var(--b2); }
