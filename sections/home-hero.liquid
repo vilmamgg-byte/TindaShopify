@@ -1,0 +1,301 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+.hh {
+  --gold:  #B8972A;
+  --black: #000000;
+  --white: #F0F0F0;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans:  'Inter', system-ui, sans-serif;
+  --ease:  cubic-bezier(0.25, 0, 0, 1);
+}
+
+.hh {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: clamp(80px, 12vh, 140px) clamp(24px, 5vw, 80px);
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-font-smoothing: antialiased;
+
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.038'/%3E%3C/svg%3E") repeat,
+    radial-gradient(ellipse 110% 60% at 50% -5%, rgba(184,151,42,0.22) 0%, transparent 68%),
+    radial-gradient(ellipse 40% 60% at -2% 55%, rgba(184,151,42,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 60% at 102% 45%, rgba(184,151,42,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 35% at 50% 108%, rgba(160,100,8,0.16) 0%, transparent 70%),
+    #000000;
+}
+
+/* glow que respira */
+.hh::after {
+  content: '';
+  position: absolute;
+  top: -12%; left: 50%;
+  transform: translateX(-50%);
+  width: min(1100px, 130%);
+  height: 80%;
+  background: radial-gradient(ellipse at top,
+    rgba(184,151,42,0.24) 0%,
+    rgba(184,151,42,0.08) 40%,
+    transparent 72%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: hh-breathe 5s ease-in-out infinite;
+}
+@keyframes hh-breathe {
+  0%, 100% { opacity: 0.8; transform: translateX(-50%) scaleY(1);    }
+  50%       { opacity: 1;   transform: translateX(-50%) scaleY(1.1);  }
+}
+
+.hh__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  max-width: 860px;
+  margin-inline: auto;
+}
+
+/* etiqueta superior */
+.hh__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 36px;
+  animation: hh-fade-up 0.8s var(--ease) both 0.1s;
+}
+.hh__eyebrow::before,
+.hh__eyebrow::after {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* título principal */
+.hh__title {
+  font-family: var(--sans);
+  font-size: clamp(60px, 11vw, 130px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  color: var(--white);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  animation: hh-fade-up 0.9s var(--ease) both 0.25s;
+}
+
+/* palabra serif en itálica */
+.hh__title-serif {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(72px, 13vw, 158px);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--gold);
+  animation: hh-fade-up 1s var(--ease) both 0.4s;
+}
+
+/* línea decorativa */
+.hh__rule {
+  width: 48px; height: 1px;
+  background: var(--gold);
+  margin: 32px auto;
+  animation: hh-fade-in 0.6s var(--ease) both 0.55s;
+}
+
+/* subtítulo */
+.hh__sub {
+  font-family: var(--serif);
+  font-size: clamp(17px, 2.2vw, 22px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.65;
+  color: rgba(240,240,240,0.65);
+  max-width: 560px;
+  margin-bottom: 48px;
+  animation: hh-fade-up 0.9s var(--ease) both 0.65s;
+}
+
+/* botón 3D con glow */
+.hh__cta {
+  animation: hh-fade-up 0.9s var(--ease) both 0.8s;
+}
+.hh__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 58px;
+  padding: 0 40px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #D4AF47 0%, #B8921E 100%);
+  color: #0A0A0A;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 5px 0 #7A5E0E,
+    0 6px 2px rgba(0,0,0,0.5),
+    0 0 20px rgba(185,151,42,0.50),
+    0 0 45px rgba(185,151,42,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.28);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.hh__btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%);
+  pointer-events: none;
+}
+.hh__btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
+  animation: hh-shimmer 3.5s ease infinite;
+  pointer-events: none;
+}
+@keyframes hh-shimmer {
+  0%        { left: -120%; }
+  60%, 100% { left: 170%;  }
+}
+.hh__btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 7px 0 #7A5E0E,
+    0 8px 4px rgba(0,0,0,0.5),
+    0 0 30px rgba(185,151,42,0.70),
+    0 0 65px rgba(185,151,42,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.28);
+}
+.hh__btn:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 1px 0 #7A5E0E,
+    0 0 14px rgba(185,151,42,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+/* garantía */
+.hh__trust {
+  margin-top: 20px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(240,240,240,0.35);
+  text-transform: uppercase;
+  animation: hh-fade-in 0.6s var(--ease) both 1s;
+}
+
+/* scroll indicator */
+.hh__scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+  animation: hh-fade-in 1s var(--ease) both 1.2s;
+}
+.hh__scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: hh-scroll-pulse 2s ease-in-out infinite;
+}
+@keyframes hh-scroll-pulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1);    }
+  50%       { opacity: 1;   transform: scaleY(1.15); }
+}
+
+@keyframes hh-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes hh-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .hh__title { font-size: clamp(52px, 14vw, 80px); }
+  .hh__title-serif { font-size: clamp(64px, 17vw, 100px); }
+}
+</style>
+
+<div class="hh">
+  <div class="hh__inner">
+
+    <span class="hh__eyebrow">{{ section.settings.eyebrow }}</span>
+
+    <h1 class="hh__title">
+      {{ section.settings.word_sans }}
+      <span class="hh__title-serif">{{ section.settings.word_serif }}</span>
+    </h1>
+
+    <div class="hh__rule"></div>
+
+    <p class="hh__sub">{{ section.settings.subtitle }}</p>
+
+    <div class="hh__cta">
+      <a href="{{ section.settings.cta_url }}" class="hh__btn">
+        {{ section.settings.cta_label }}
+      </a>
+    </div>
+
+    <p class="hh__trust">{{ section.settings.trust }}</p>
+
+  </div>
+
+  <div class="hh__scroll" aria-hidden="true">
+    <div class="hh__scroll-line"></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Home Hero — Disciplina Imparable",
+  "tag": "section",
+  "settings": [
+    { "type": "text",     "id": "eyebrow",    "label": "Etiqueta superior",   "default": "Ebook Premium · Desarrollo Personal" },
+    { "type": "text",     "id": "word_sans",  "label": "Palabra sans (Inter)", "default": "Disciplina" },
+    { "type": "text",     "id": "word_serif", "label": "Palabra serif (Cormorant)", "default": "Imparable" },
+    { "type": "textarea", "id": "subtitle",   "label": "Subtítulo",           "default": "El método que convierte tus metas en resultados reales — sin excusas, sin atajos." },
+    { "type": "url",      "id": "cta_url",    "label": "URL del botón CTA" },
+    { "type": "text",     "id": "cta_label",  "label": "Texto del botón",     "default": "Obtener Disciplina Imparable →" },
+    { "type": "text",     "id": "trust",      "label": "Texto de confianza",  "default": "Garantía de devolución · 7 días · Sin preguntas" }
+  ],
+  "presets": [
+    { "name": "Home Hero — Disciplina Imparable" }
+  ]
+}
+{% endschema %}
